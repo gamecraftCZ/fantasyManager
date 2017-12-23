@@ -1,9 +1,11 @@
 package fantasyManager;
 
+import java.util.ArrayList;
+
 public class GlobalVariables {
 
-    public static editorHandler editor;
-    public static viewHandler view;
+    public static SlideHandler slide;
     public static boolean isCurrentliEditor = true;
+    public static ArrayList<String> lastVisitedSlides;
 
 }

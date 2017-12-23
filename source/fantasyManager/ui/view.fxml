@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.EditorController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.EditorController">
    <children>
       <TextField fx:id="name" layoutX="35.0" layoutY="35.0" prefHeight="50.0" prefWidth="550.0" promptText="Jméno">
          <font>
@@ -22,7 +22,7 @@
          <children>
             <Button fx:id="levelUp" layoutX="143.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0">
                <graphic>
-                  <ImageView fx:id="upButton" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../resources/arrowUp.png" />
                      </image>
@@ -30,7 +30,7 @@
                </graphic></Button>
             <Button fx:id="levelBack" layoutX="35.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0">
                <graphic>
-                  <ImageView fx:id="backButton" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../resources/arrowLeft.png" />
                      </image>
@@ -42,12 +42,12 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="520.0" prefWidth="475.0">
                <children>
-                  <Button fx:id="leftPlus" layoutX="100.0" layoutY="50.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
+                  <Button layoutX="100.0" layoutY="50.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
                      <font>
                         <Font size="17.0" />
                      </font>
                      <graphic>
-                        <ImageView fx:id="leftPlus" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../resources/plus.png" />
                            </image>
@@ -59,7 +59,7 @@
                         <Font size="17.0" />
                      </font>
                      <graphic>
-                        <ImageView fx:id="rightPlus" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../resources/plus.png" />
                            </image>
@@ -73,36 +73,6 @@
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#838383" height="400.0" stroke="BLACK" strokeType="INSIDE" width="400.0" />
             <ImageView fx:id="image" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
-            <Group>
-               <children>
-                  <Button fx:id="imageLeft" mnemonicParsing="false" onMouseClicked="#imageLeftButton" prefHeight="400.0" prefWidth="64.0" />
-                  <ImageView fitHeight="32.0" fitWidth="32.0" layoutY="170.0" onMouseClicked="#imageLeftButton" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/arrowLeftV2.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Group>
-            <Group visible="false">
-               <children>
-                  <Button fx:id="imageRight" mnemonicParsing="false" onMouseClicked="#imageRightButton" prefHeight="400.0" prefWidth="64.0" visible="false" />
-                  <ImageView fitHeight="32.0" fitWidth="32.0" layoutY="170.0" mouseTransparent="true" onMouseClicked="#imageRightButton" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/arrowRightV2.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Group>
-            <Group visible="false">
-               <children>
-                  <Button fx:id="imagePlus" mnemonicParsing="false" onMouseClicked="#addImage" prefHeight="50.0" prefWidth="50.0" />
-                  <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#addImage" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/plus.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Group>
          </children>
       </Group>
    </children>

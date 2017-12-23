@@ -15,9 +15,24 @@ public class FileManager {
         return true;
     }
 
-    public  static  boolean newProjectFile(File file) {
+    public static boolean newProjectFile(File file) {
         // create new Project file
         System.out.println("Creating project file: " + file);
+        saved = true;
+        return true;
+    }
+
+    public static boolean save() {
+        System.out.println("Saving project...");
+        return true;
+    }
+    public static boolean saveAs(File file) {
+        System.out.println("Saving project...");
+        return true;
+    }
+
+    public static boolean doYouWantToSave() {
+        System.out.println("Do you want to save this project?");
         return true;
     }
 
