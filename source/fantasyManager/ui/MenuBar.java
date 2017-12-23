@@ -1,7 +1,7 @@
 package fantasyManager.ui;
 
 import fantasyManager.FileManager;
-import fantasyManager.GlobalVariables;
+import fantasyManager.Global;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
@@ -25,7 +25,7 @@ public class MenuBar {
 //    }
 
 
-    public void newProject() throws IOException {
+    public void newProject() {
         System.out.println("Creating new project...");
         if (!FileManager.doYouWantToSave()) {
             System.out.println("Saving project canceled or not successful");
@@ -45,13 +45,13 @@ public class MenuBar {
         if (file != null) {
             System.out.println("creating file: " + file);
             if (FileManager.newProjectFile(file)) {
-                // load project
+                // create project
                 System.out.println("File created");
-                GlobalVariables.slide = new fantasyManager.SlideHandler("/");
+                Global.slide = new fantasyManager.SlideHandler("/");
                 System.out.println("New slide handler created");
                 openNewScene("editing.fxml");
                 System.out.println("Scene loaded");
-                // project loaded
+                // project created
             } else {
                 System.out.println("File not created: " + file);
             }
@@ -61,9 +61,9 @@ public class MenuBar {
         selectFileWindowOpened = false;
 
         FileManager.newProjectFile(file);
-        GlobalVariables.slide = new fantasyManager.SlideHandler("/");
+        Global.slide = new fantasyManager.SlideHandler("/");
     }
-    public void saveProject() throws IOException {
+    public void saveProject() {
         System.out.println("Saving project....");
         if (FileManager.saved) {
             System.out.println("Project already saved");
@@ -71,7 +71,7 @@ public class MenuBar {
         }
         FileManager.save();
     }
-    public void saveProjectAs() throws IOException {
+    public void saveProjectAs() {
         System.out.println("Saving project as....");
         if (selectFileWindowOpened) {
             // System dialog for file open already opened
@@ -98,7 +98,7 @@ public class MenuBar {
         }
         selectFileWindowOpened = false;
     }
-    public void openProject() throws IOException {
+    public void openProject() {
         if (!FileManager.doYouWantToSave()) {
             System.out.println("Saving project canceled or not successful");
         }
@@ -119,7 +119,7 @@ public class MenuBar {
             if (FileManager.openProjectFile(file)) {
                 // load project
                 System.out.println("File opened");
-                GlobalVariables.slide = new fantasyManager.SlideHandler("/");
+                Global.slide = new fantasyManager.SlideHandler("/");
                 System.out.println("New slide handler created");
                 openNewScene("editing.fxml");
                 System.out.println("Scene loaded");
@@ -134,24 +134,24 @@ public class MenuBar {
         selectFileWindowOpened = false;
     }
 
-    public void switchToView() throws IOException {
+    public void switchToView() {
         if (selectedEditMode) {
             // switch to view mode
             System.out.println("Switching to view mode...");
             FileManager.save();
-            GlobalVariables.slide = new fantasyManager.SlideHandler("/");
+            Global.slide = new fantasyManager.SlideHandler("/");
             openNewScene("view.fxml");
         } else {
             // view mode already selected
             System.out.println("View mode already selected");
         }
     }
-    public void switchToEdit() throws IOException {
+    public void switchToEdit() {
         if (!selectedEditMode) {
             // switch to edit mode
             System.out.println("Switching to edit mode...");
             FileManager.save();
-            GlobalVariables.slide = new fantasyManager.SlideHandler("/");
+            Global.slide = new fantasyManager.SlideHandler("/");
             openNewScene("editing.fxml");
         } else {
             // edit mode already selected
@@ -187,10 +187,14 @@ public class MenuBar {
 
 
 
-    private void openNewScene(String scenePath) throws IOException {
+    private void openNewScene(String scenePath) {
         System.out.println("Opening scene: " + scenePath);
-        Pane pane = FXMLLoader.load(getClass().getResource(scenePath));
-        root.getChildren().addAll(pane);
+        try {
+            Pane pane = FXMLLoader.load(getClass().getResource(scenePath));
+            root.getChildren().addAll(pane);
+        } catch (IOException ex) {
+            // No chance to get there until all opened scenes are in available
+        }
     }
 
 

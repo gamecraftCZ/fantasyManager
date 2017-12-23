@@ -53,11 +53,11 @@
                   </Menu>
                 <Menu mnemonicParsing="false" text="Pohled">
                   <items>
-                        <RadioMenuItem fx:id="viewMode" mnemonicParsing="false" onAction="#switchToView" selected="true" text="Režim zobrazení">
+                        <RadioMenuItem fx:id="viewMode" mnemonicParsing="false" onAction="#switchToView" text="Režim zobrazení">
                            <toggleGroup>
                               <ToggleGroup fx:id="editOrViewSelect" />
                            </toggleGroup></RadioMenuItem>
-                        <RadioMenuItem fx:id="editMode" mnemonicParsing="false" onAction="#switchToEdit" text="Režim úpravy" toggleGroup="$editOrViewSelect" />
+                        <RadioMenuItem fx:id="editMode" mnemonicParsing="false" onAction="#switchToEdit" selected="true" text="Režim úpravy" toggleGroup="$editOrViewSelect" />
                   </items>
                 </Menu>
               </menus>
