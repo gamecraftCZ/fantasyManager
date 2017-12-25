@@ -47,7 +47,7 @@ public class MenuBar {
             if (FileManager.newProjectFile(file)) {
                 // create project
                 System.out.println("File created");
-                Global.slide = new fantasyManager.SlideHandler("/");
+                Global.slide = new fantasyManager.SlideHandler("");
                 System.out.println("New slide handler created");
                 openNewScene("editing.fxml");
                 System.out.println("Scene loaded");
@@ -59,9 +59,6 @@ public class MenuBar {
             System.out.println("File was not selected");
         }
         selectFileWindowOpened = false;
-
-        FileManager.newProjectFile(file);
-        Global.slide = new fantasyManager.SlideHandler("/");
     }
     public void saveProject() {
         System.out.println("Saving project....");
@@ -119,7 +116,7 @@ public class MenuBar {
             if (FileManager.openProjectFile(file)) {
                 // load project
                 System.out.println("File opened");
-                Global.slide = new fantasyManager.SlideHandler("/");
+                Global.slide = new fantasyManager.SlideHandler("");
                 System.out.println("New slide handler created");
                 openNewScene("editing.fxml");
                 System.out.println("Scene loaded");
@@ -139,7 +136,7 @@ public class MenuBar {
             // switch to view mode
             System.out.println("Switching to view mode...");
             FileManager.save();
-            Global.slide = new fantasyManager.SlideHandler("/");
+            Global.slide = new fantasyManager.SlideHandler("");
             openNewScene("view.fxml");
         } else {
             // view mode already selected
@@ -151,7 +148,7 @@ public class MenuBar {
             // switch to edit mode
             System.out.println("Switching to edit mode...");
             FileManager.save();
-            Global.slide = new fantasyManager.SlideHandler("/");
+            Global.slide = new fantasyManager.SlideHandler("");
             openNewScene("editing.fxml");
         } else {
             // edit mode already selected

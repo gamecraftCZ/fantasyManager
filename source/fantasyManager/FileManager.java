@@ -2,7 +2,6 @@ package fantasyManager;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import jdk.internal.util.xml.impl.Input;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,6 +17,10 @@ public class FileManager {
     private static File fileObject;
     public static boolean saved = true;
 
+    public static File getFileObject() {
+        return fileObject;
+    }
+
     public static boolean newProjectFile(File file) {
         // create new Project file
         System.out.println("Creating project file: " + file);
@@ -25,7 +28,6 @@ public class FileManager {
         OutputStream outStream = null;
         boolean Return = false;
         try {
-            System.out.println("Creating project file");
             file.createNewFile();
             System.out.println("Creating input stream");
             inStream = FileManager.class
@@ -38,17 +40,18 @@ public class FileManager {
             while ((length = inStream.read(buffer)) > 0) {
                 outStream.write(buffer, 0, length);
             }
-            System.out.println("Project created");
             fileObject = file;
             saved = true;
             Return = true;
-        } catch (IOException ex) {
-            System.out.println("Cant create project, IOException: " + ex.toString());
+            System.out.println("Project created");
+        } catch (Exception ex) {
+            System.out.println("Cant create project, Exception: " + ex.toString());
+            Global.showError("Projekt nelze vytvoořit!", "Chyba při tvorbě projektu, error: \n" + ex.toString());
         }
 
         try {
-            inStream.close();
             outStream.close();
+            inStream.close();
         } catch (IOException ex) {
             System.out.println("Cant close stream for new project file, IOException: " + ex.toString());
         }
@@ -97,19 +100,15 @@ public class FileManager {
 
 
 
-
-
-
-
-
-
-
-
-
-
     public static InputStream getFile(String path) throws IOException {
+        System.out.println("Loading zip entry: " +path + " , from zip file: " +fileObject);
         ZipFile zipFile = new ZipFile(fileObject);
-        InputStream stream = zipFile.getInputStream(new ZipEntry(path));
+        ZipEntry entry = new ZipEntry(path);
+        InputStream stream = zipFile.getInputStream(entry);
+        if (zipFile == null) {
+            System.out.println("File not loaded correctly!");
+            throw new IOException("File does not exists in this zip file");
+        }
         return stream;
     }
 

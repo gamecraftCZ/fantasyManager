@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<slide>
+    <name>Název projektu</name>
+    <info>
+        <item>
+            <name>Info name 1</name>
+            <value>Info Value 1</value>
+        </item>
+        <item>
+            <name>Info name 2</name>
+            <value>Info Value 2</value>
+        </item>
+    </info>
+    <images>1 2 3</images>
+    <linksPointingHere>organisations/0/ characters/1/</linksPointingHere>
+    <leftButtons>
+        <button>
+            <title>Název levého tlačítka</title>
+            <subtitle>Podnázev po rozkliknutí</subtitle>
+            <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another buttons -->
+            <text>text text text</text>
+            <link>characters/1/</link>
+            <leftButtons>
+                <button>
+                    <title>Název levého tlačítka</title>
+                    <subtitle>Podnázev po rozkliknutí</subtitle>
+                    <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another button (not on this button layer) -->7
+                    <text>text left text</text>
+                    <link>characters/1/</link>
+                    <leftButtons></leftButtons>
+                    <rightButtons></rightButtons>
+                </button>
+            </leftButtons>
+            <rightButtons>
+                <button>
+                    <title>Název pravého tlačítka</title>
+                    <subtitle>Podnázev po rozkliknutí</subtitle>
+                    <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another button (not on this button layer) -->
+                    <text>text left text</text>
+                    <link>places/0/</link>
+                    <leftButtons></leftButtons>
+                    <rightButtons></rightButtons>
+                </button>
+            </rightButtons>
+        </button>
+    </leftButtons>
+    <rightButtons>
+        <button>
+            <title>Název pravého tlačítka</title>
+            <subtitle>Podnázev po rozkliknutí</subtitle>
+            <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another buttons -->
+            <text>text text text</text>
+            <link>characters/1/</link>
+            <leftButtons>
+                <button>
+                    <title>Název levého tlačítka</title>
+                    <subtitle>Podnázev po rozkliknutí</subtitle>
+                    <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another button (not on this button layer) -->7
+                    <text>text left text</text>
+                    <link>characters/1/</link>
+                    <leftButtons></leftButtons>
+                    <rightButtons></rightButtons>
+                </button>
+            </leftButtons>
+            <rightButtons>
+                <button>
+                    <title>Název pravého tlačítka</title>
+                    <subtitle>Podnázev po rozkliknutí</subtitle>
+                    <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another button (not on this button layer) -->
+                    <text>text left text</text>
+                    <link>places/0/</link>
+                    <leftButtons></leftButtons>
+                    <rightButtons></rightButtons>
+                </button>
+            </rightButtons>
+        </button>
+    </rightButtons>
+</slide>
