@@ -9,6 +9,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class Global {
@@ -16,6 +18,7 @@ public class Global {
     public static SlideHandler slide;
     public static boolean isCurrentliEditor = true;
     public static ArrayList<String> lastVisitedSlides;
+    public static Path tempFolder;
 
 
     public static void showError(String title, String text) {

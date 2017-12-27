@@ -1,9 +1,7 @@
 package fantasyManager;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import sun.security.krb5.internal.crypto.Aes128;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,7 +31,7 @@ public class SlideHandler {
         path = slidePath;
         InputStream stream;
         try {
-            stream = FileManager.getFile(slidePath + "index.xml");
+            stream = FileManager.getFileFromZip(slidePath + "index.xml");
         } catch (IOException ex) {
             System.out.println("Cant open file " +slidePath+ " from project file " + FileManager.getFileObject());
             Global.showError("Project file error", "Cant open slide "
@@ -60,7 +58,6 @@ public class SlideHandler {
         }
         loadedCorrectly = true;
     }
-
     private void loadData(InputStream inputStream) throws Exception {
         System.out.println("Reading slide file");
 
@@ -141,7 +138,6 @@ public class SlideHandler {
 
         System.out.println("Slide file loaded");
     }
-
     private UserButton getButtonInfo(XPath xPath, Document doc, String pathToButton, int buttonId) throws Exception {
         System.out.println("Getting button info");
         // get button data //

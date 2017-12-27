@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import javax.xml.bind.annotation.XmlElementDecl;
+import java.nio.file.Files;
+
 public class Main extends Application {
 
 
@@ -25,6 +28,7 @@ public class Main extends Application {
                 if (FileManager.saved) {
                     // saved, can be closed
                     System.out.println("Nothing to save, can be closed");
+                    Global.tempFolder.toFile().delete();
                 } else {
                     // project is not saved, ask for saving
                     System.out.println("Do you want to save this project?");
@@ -39,6 +43,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         System.out.println("Starting fantasy manager...");
+        try {
+            Global.tempFolder = Files.createTempDirectory("fantasyManager-");
+        } catch (Exception ex) {
+            System.out.println("Error creating temp dictionary.");
+        }
         launch(args);
         System.out.println("Fantasy manager closed");
     }

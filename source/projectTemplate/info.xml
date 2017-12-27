@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project version="1">
+    <images sequence="2"></images>
+
+    <characters sequence="1">
+        <item id="0">
+            <jmeno>Jméno postavy</jmeno>
+        </item>
+    </characters>
+
+    <organisations sequence="1">
+        <item id="0">
+            <jmeno>Jméno organizace</jmeno>
+        </item>
+    </organisations>
+
+    <other sequence="1">
+        <item id="0">
+            <jmeno>Jméno ostatního</jmeno>
+        </item>
+    </other>
+
+    <places sequence="1">
+        <item id="0">
+            <jmeno>Jméno místa</jmeno>
+        </item>
+    </places>
+
+</project>

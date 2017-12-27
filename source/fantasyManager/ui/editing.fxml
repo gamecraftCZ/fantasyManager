@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.EditorController">
+<Pane fx:id="back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.EditorController">
    <children>
       <TextField fx:id="name" layoutX="35.0" layoutY="35.0" onInputMethodTextChanged="#nameChanged" prefHeight="50.0" prefWidth="550.0" promptText="Jméno">
          <font>
@@ -72,7 +72,7 @@
       </ScrollPane>
       <Group layoutX="35.0" layoutY="111.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#838383" height="400.0" stroke="BLACK" strokeType="INSIDE" width="400.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#838383" height="400.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="400.0" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="400.0" prefWidth="400.0" text="Obrázek není k dispozici">
                <font>
                   <Font size="21.0" />
@@ -99,9 +99,9 @@
                   </ImageView>
                </children>
             </Group>
-            <Group fx:id="imagePlus" layoutX="344.0" layoutY="175.0">
+            <Group fx:id="addImage" layoutX="344.0" layoutY="175.0">
                <children>
-                  <Button fx:id="imagePlusButton" mnemonicParsing="false" onMouseClicked="#addImage" opacity="0.0" prefHeight="50.0" prefWidth="50.0" />
+                  <Button fx:id="addImageButton" mnemonicParsing="false" onMouseClicked="#addImageButton" opacity="0.0" prefHeight="50.0" prefWidth="50.0" />
                   <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="9.0" layoutY="9.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../resources/plus.png" />
