@@ -12,9 +12,17 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="back" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.EditorController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.EditorController">
    <children>
-      <TextField fx:id="name" layoutX="35.0" layoutY="35.0" onInputMethodTextChanged="#nameChanged" prefHeight="50.0" prefWidth="550.0" promptText="Jméno">
+      <Button fx:id="infoButton" layoutX="625.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#infoButton">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resources/info.png" />
+               </image></ImageView>
+         </graphic>
+      </Button>
+      <TextField fx:id="name" layoutX="35.0" layoutY="35.0" onKeyReleased="#nameChanged" prefHeight="50.0" prefWidth="550.0" promptText="Jméno">
          <font>
             <Font size="22.0" />
          </font>
@@ -41,26 +49,26 @@
       </Group>
       <ScrollPane layoutX="485.0" layoutY="111.0" prefHeight="525.0" prefWidth="480.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="520.0" prefWidth="475.0">
+          <AnchorPane fx:id="scrollAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="520.0" prefWidth="465.0">
                <children>
-                  <Button fx:id="leftPlus" layoutX="100.0" layoutY="50.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
+                  <Button fx:id="leftPlus" layoutX="100.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#addLeftButton" prefHeight="32.0" prefWidth="32.0">
                      <font>
                         <Font size="17.0" />
                      </font>
                      <graphic>
-                        <ImageView fx:id="leftPlus" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../resources/plus.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button layoutX="300.0" layoutY="50.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
+                  <Button fx:id="rightPlus" layoutX="300.0" layoutY="50.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
                      <font>
                         <Font size="17.0" />
                      </font>
                      <graphic>
-                        <ImageView fx:id="rightPlus" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../resources/plus.png" />
                            </image>
@@ -111,5 +119,19 @@
             </Group>
          </children>
       </Group>
+      <Pane fx:id="buttonRoot" layoutX="100.0" layoutY="50.0" prefHeight="550.0" prefWidth="800.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="550.0" stroke="BLACK" strokeType="INSIDE" width="800.0" />
+            <Pane fx:id="buttonPane" prefHeight="550.0" prefWidth="800.0" />
+              <Button fx:id="closeButtonsPaneButton" layoutX="740.0" layoutY="-20.0" mnemonicParsing="false" onMouseClicked="#closeButtonsPane">
+               <graphic>
+                  <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/cross.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children></Pane>
    </children>
 </Pane>

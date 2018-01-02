@@ -1,5 +1,8 @@
 package fantasyManager;
 
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+
 import java.util.ArrayList;
 
 public class UserButton {
@@ -15,7 +18,15 @@ public class UserButton {
     // if type is 2 -> list of another buttons
     public ArrayList<UserButton> leftButtons;
     public ArrayList<UserButton> rightButtons;
+    // button object in scene
+    public Pane buttonPane;
+    public Button buttonClickable;
 
+
+    public UserButton(int id) {
+        System.out.println("Creating blank user button with id: " +id);
+        buttonId = id;
+    }
     public UserButton(String title, String subTitle, int buttonId, int typeOfButton, String linkTarget, String text,
                       ArrayList<UserButton> leftButtons, ArrayList<UserButton> rightButtons) {
         System.out.println("Creating button class with: title = " +title+ ", subtitile = " +subTitle+

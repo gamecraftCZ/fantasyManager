@@ -12,6 +12,8 @@ import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class SlideHandler {
 
@@ -30,8 +32,12 @@ public class SlideHandler {
         System.out.println("Creating slide handler, path: " + slidePath);
         path = slidePath;
         InputStream stream;
+        ZipFile zipFile;
         try {
-            stream = FileManager.getFileFromZip(slidePath + "index.xml");
+            String path = slidePath + "index.xml";
+            zipFile = FileManager.getZipFile();
+            ZipEntry entry = new ZipEntry(path);
+            stream = zipFile.getInputStream(entry);
         } catch (IOException ex) {
             System.out.println("Cant open file " +slidePath+ " from project file " + FileManager.getFileObject());
             Global.showError("Project file error", "Cant open slide "
@@ -57,6 +63,12 @@ public class SlideHandler {
             return;
         }
         loadedCorrectly = true;
+        try {
+            stream.close();
+            zipFile.close();
+        } catch(Exception ex) {
+            System.out.println("Cant close stream! error: " +ex.toString());
+        }
     }
     private void loadData(InputStream inputStream) throws Exception {
         System.out.println("Reading slide file");

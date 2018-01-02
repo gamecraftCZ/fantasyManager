@@ -4,6 +4,7 @@ import fantasyManager.FileManager;
 import fantasyManager.Global;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -15,15 +16,17 @@ public class MenuBar {
 
     private boolean selectedEditMode = true;
     private boolean selectFileWindowOpened = false;
-    @FXML
-    private Pane root;
-
-
-//    @FXML
-//    public void initialize() {
+    @FXML private Pane root;
+    @FXML private MenuItem addCharacter;
+    @FXML private MenuItem addPlace;
+    @FXML private MenuItem addSubPlace;
+    @FXML private MenuItem addOrganisation;
+    @FXML private MenuItem addSubOrganisation;
+    @FXML private MenuItem goToButton;
+    @FXML private Pane add;
+//    @FXML public void initialize() {
 //        System.out.println("Menu bar initialization");
 //    }
-
 
     public void newProject() {
         System.out.println("Creating new project...");
@@ -51,6 +54,7 @@ public class MenuBar {
                 System.out.println("New slide handler created");
                 openNewScene("editing.fxml");
                 System.out.println("Scene loaded");
+                projectLoadedAllowMenuButtons(true);
                 // project created
             } else {
                 System.out.println("File not created: " + file);
@@ -136,8 +140,8 @@ public class MenuBar {
             // switch to view mode
             System.out.println("Switching to view mode...");
             FileManager.save();
-            Global.slide = new fantasyManager.SlideHandler("");
             openNewScene("view.fxml");
+            projectLoadedAllowMenuButtons(false);
         } else {
             // view mode already selected
             System.out.println("View mode already selected");
@@ -147,9 +151,8 @@ public class MenuBar {
         if (!selectedEditMode) {
             // switch to edit mode
             System.out.println("Switching to edit mode...");
-            FileManager.save();
-            Global.slide = new fantasyManager.SlideHandler("");
             openNewScene("editing.fxml");
+            projectLoadedAllowMenuButtons(false);
         } else {
             // edit mode already selected
             System.out.println("Edit mode already selected");
@@ -165,35 +168,48 @@ public class MenuBar {
 
     public void addCharacter() {
         System.out.println("Adding character");
-    } // not done
+    }
     public void addPlace() {
         System.out.println("Adding place");
-    } // not done
+    }
     public void addSubPlace() {
         System.out.println("Adding sub place");
-    } // not done
+    }
     public void addOrganisation() {
         System.out.println("Adding organisation");
-    } // not done
+    }
     public void addSubOrganisation() {
         System.out.println("Adding sub organisation");
-    } // not done
+    }
+
+    public void openGoTo() {
+        System.out.println("Opening go to menu");
+    }
 
 
 
 
-
+    private void projectLoadedAllowMenuButtons(boolean allow) {
+        System.out.println("Allowing menu buttons on open project: " + allow);
+        addCharacter.setDisable(allow);
+        addPlace.setDisable(allow);
+        addSubPlace.setDisable(allow);
+        addOrganisation.setDisable(allow);
+        addSubOrganisation.setDisable(allow);
+        goToButton.setDisable(allow);
+    }
 
     private void openNewScene(String scenePath) {
         System.out.println("Opening scene: " + scenePath);
         try {
             Pane pane = FXMLLoader.load(getClass().getResource(scenePath));
+            root.getChildren().removeAll(root.getChildren());
             root.getChildren().addAll(pane);
         } catch (IOException ex) {
-            // No chance to get there until all opened scenes are in available
+            System.out.println("No chance to get there, error: " +ex.toString());
+            // No chance to get there until all opened scenes are available
         }
     }
-
 
 }
 
