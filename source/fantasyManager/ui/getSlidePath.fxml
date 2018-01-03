@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="selectSlidePathRoot" pickOnBounds="false" prefHeight="584.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="586.0" stroke="BLACK" strokeType="INSIDE" width="600.0" />
+        <Label layoutX="190.0" text="Zvol nadřazené">
+            <font>
+                <Font size="32.0" />
+            </font>
+        </Label>
+        <TextField layoutX="50.0" layoutY="50.0" prefWidth="250.0" promptText="Hledat" />
+        <TableView layoutX="50.0" layoutY="90.0" prefHeight="460.0" prefWidth="500.0" tableMenuButtonVisible="true">
+            <columns>
+                <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="250.0" resizable="false" text="Název" />
+                <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="200.0" text="typ" />
+                <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" />
+            </columns>
+        </TableView>
+    </children></Pane>

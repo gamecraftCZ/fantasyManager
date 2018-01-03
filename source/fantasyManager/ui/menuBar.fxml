@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.MenuBar">
    <children>
@@ -45,11 +39,10 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Přidat">
                     <items>
-                      <MenuItem fx:id="addCharacter" disable="true" mnemonicParsing="false" onAction="#addCharacter" text="Postavu" />
+                        <MenuItem fx:id="addCharacter" disable="true" mnemonicParsing="false" onAction="#addCharacter" text="Postavu" />
                         <MenuItem fx:id="addPlace" disable="true" mnemonicParsing="false" onAction="#addPlace" text="Místo" />
-                        <MenuItem fx:id="addSubPlace" disable="true" mnemonicParsing="false" onAction="#addSubPlace" text="Část místa" />
                         <MenuItem fx:id="addOrganisation" disable="true" mnemonicParsing="false" onAction="#addOrganisation" text="Organizaci" />
-                        <MenuItem fx:id="addSubOrganisation" disable="true" mnemonicParsing="false" onAction="#addSubOrganisation" text="Část organizace" />
+                        <MenuItem fx:id="addOther" disable="true" mnemonicParsing="false" onAction="#addOther" text="Ostatní" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Úpravy" visible="false">
@@ -76,55 +69,8 @@
             <Pane fx:id="root" prefHeight="675.0" prefWidth="1000.0" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
-      <Pane fx:id="add" layoutX="50.0" layoutY="50.0" prefHeight="600.0" prefWidth="900.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="600.0" stroke="BLACK" strokeType="INSIDE" width="900.0" />
-            <Label layoutX="380.0" text="Přidat">
-               <font>
-                  <Font size="50.0" />
-               </font>
-            </Label>
-            <Button fx:id="addClose" layoutX="300.0" layoutY="540.0" mnemonicParsing="false" text="Zrušit">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Button>
-            <Button fx:id="addAdd" layoutX="500.0" layoutY="540.0" mnemonicParsing="false" text="Přidat">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Button>
-            <Label layoutX="310.0" layoutY="90.0" text="Typ: ">
-               <font>
-                  <Font size="28.0" />
-               </font>
-            </Label>
-            <ChoiceBox layoutX="380.0" layoutY="100.0" prefWidth="200.0" />
-            <Label layoutX="150.0" layoutY="150.0" text="Název:">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Label>
-            <TextField layoutX="245.0" layoutY="150.0" prefWidth="500.0" promptText="Název">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </TextField>
-            <Label layoutX="150.0" layoutY="250.0" text="Nadřazený orgán:">
-               <font>
-                  <Font size="35.0" />
-               </font></Label>
-            <Button layoutX="440.0" layoutY="240.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="75.0" text="...">
-               <font>
-                  <Font size="35.0" />
-               </font>
-            </Button>
-            <Label layoutX="550.0" layoutY="268.0" text="...">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-         </children>
-      </Pane>
+       <Pane fx:id="popOutMenu" layoutX="50.0" layoutY="50.0" prefHeight="600.0" prefWidth="900.0" visible="false">
+       </Pane>
+
    </children>
 </AnchorPane>
