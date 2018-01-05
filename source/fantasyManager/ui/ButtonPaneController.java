@@ -1,5 +1,6 @@
 package fantasyManager.ui;
 
+import fantasyManager.FileManager;
 import fantasyManager.Global;
 import fantasyManager.UserButton;
 import javafx.beans.value.ChangeListener;
@@ -102,6 +103,7 @@ public class ButtonPaneController {
                 }
             }
         }
+        FileManager.saved = false;
     }
     public void subTitleChanged() {
         System.out.println("New subtitle: " + buttonSubTitle.getText());
@@ -120,6 +122,7 @@ public class ButtonPaneController {
                 }
             }
         }
+        FileManager.saved = false;
     }
     public void textAreaChanged() {
         System.out.println("New text: " + buttonTextArea.getText());
@@ -138,6 +141,7 @@ public class ButtonPaneController {
                 }
             }
         }
+        FileManager.saved = false;
     }
 
     public void typeChanged(String buttonType) {
@@ -196,6 +200,7 @@ public class ButtonPaneController {
                 link.setVisible(true);
             }
         }
+        FileManager.saved = false;
     }
 
 

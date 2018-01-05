@@ -3,12 +3,13 @@ package fantasyManager;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -66,31 +67,6 @@ public class FileManager {
         OutputStream outStream = null;
         boolean Return = false;
         try {
-//            try {
-//                file.delete();
-//            } catch (Exception ex) {
-//
-//            }
-
-
-
-//            net.lingala.zip4j.core.ZipFile zipFile = new net.lingala.zip4j.core.ZipFile(file);
-//            ZipParameters parameters = new ZipParameters();
-//            parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
-//            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-//            File folder = new File(FileManager.class.getResource("/projectTemplate").toString().substring(6));
-//            System.out.println("Template folder is: " +folder);
-//            File[] items = folder.listFiles();
-//            for (File f : items) {
-//                System.out.println("Adding file: " +f.getName());
-//                if (f.isFile()) {
-//                    zipFile.addFile(f, parameters);
-//                } else {
-//                    zipFile.addFolder(f, parameters);
-//                }
-//            }
-//
-//
             file.createNewFile();
             System.out.println("Creating input stream");
             inStream = FileManager.class
@@ -121,24 +97,42 @@ public class FileManager {
         return Return;
 
     }
-
     public static boolean openProjectFile(File file) {
         //open project file into zipFile(handler)
         System.out.println("Opening project file: " + file);
         return true;
     }
-
     public static boolean save() {
         System.out.println("Saving project...");
-        return true;
+        // save slide file //
+        System.out.println("Adding slide to project file");
+        String slidePath = Global.slide.path;
+        Map<String, String> env = new HashMap<>();
+        env.put("create", "true");
+        URI uri = URI.create("jar:" + fileObject.toURI());
+        System.out.println("Zip file path: " + uri);
+        try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
+            // add slide to file
+            Path pathInZipfile = fs.getPath(slidePath);
+            Files.delete(pathInZipfile);
+            OutputStream slideOutputStream = Files.newOutputStream(pathInZipfile);
+            Document slideDoc = Global.slide.toDocument();
+            printXML(slideDoc);
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            DOMSource source = new DOMSource(slideDoc);
+            StreamResult result = new StreamResult(slideOutputStream);
+            transformer.transform(source, result);
+            slideOutputStream.close();
+            System.out.println("Slide saved to zip file");
+            return true;
+        } catch (Exception ex) {
+            System.out.println("Saving error: " + ex.toString());
+            Global.showError("Svaing error", "Nelze uložit projekt, chyba: \n" + ex.toString());
+            return false;
+        }
     }
     public static boolean saveAs(File file) {
         System.out.println("Saving project...");
-        return true;
-    }
-
-    public static boolean doYouWantToSave() {
-        System.out.println("Do you want to save this project?");
         return true;
     }
 
@@ -173,6 +167,94 @@ public class FileManager {
         return returnImage;
     }
 
+    public static String addSlide(String slideType, String name, String upSlide) {
+        try {
+            // get sequence //
+            int sequence = 0;
+            // get input stream
+            String path = "info.xml";
+            ZipFile zipFile = getZipFile();
+            ZipEntry entry = new ZipEntry(path);
+            InputStream xmlStream = zipFile.getInputStream(entry);
+
+            // create xml parser
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(xmlStream);
+            System.out.println("XML doc created");
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xPath = xpathFactory.newXPath();
+
+            // get slide sequence
+            System.out.println("Getting name");
+            XPathExpression expr = xPath.compile("/project/" + slideType + "[1]");
+            Node slideSequence = (Node) expr.evaluate(doc, XPathConstants.NODE);
+            XPathExpression sequenceExpr = xPath.compile("/project/" + slideType + "[1]/@sequence");
+            int newSlideId = Integer.parseInt((String) sequenceExpr.evaluate(doc, XPathConstants.STRING));
+            System.out.println("New image id: " + newSlideId);
+            try {
+                xmlStream.close();
+                zipFile.close();
+            } catch (Exception ex) {
+                System.out.println("Cant close stream or zipFile! error: " + ex.toString());
+            }
+
+
+            // add slide to file //
+            System.out.println("Adding slide to project file");
+            String slidePath = slideType + "/" + newSlideId + ".xml";
+            Map<String, String> env = new HashMap<>();
+            env.put("create", "true");
+            URI uri = URI.create("jar:" + fileObject.toURI());
+            System.out.println("Zip file path: " + uri);
+            try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
+                // add slide to file
+                Path pathInZipfile = fs.getPath(slidePath);
+                OutputStream slideOutputStream = Files.newOutputStream(pathInZipfile);
+                SlideHandler slide = new SlideHandler(name, upSlide);
+                Document slideDoc = slide.toDocument();
+                printXML(slideDoc);
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                DOMSource source = new DOMSource(slideDoc);
+                StreamResult result = new StreamResult(slideOutputStream);
+                transformer.transform(source, result);
+                slideOutputStream.close();
+                System.out.println("Slide saved to zip file");
+
+                // add slide to info.xml
+                slideSequence.appendChild(getElementForNewItemXml(newSlideId, name, doc));
+                // add 1 to slide sequence
+                slideSequence.getAttributes().getNamedItem("sequence").setNodeValue("" + (newSlideId + 1));
+                // write the content into xml file
+
+                Files.delete(fs.getPath("info.xml"));
+                OutputStream infoFileStream = Files.newOutputStream(fs.getPath("info.xml"));
+                transformer = TransformerFactory.newInstance().newTransformer();
+                source = new DOMSource(doc);
+                result = new StreamResult(infoFileStream);
+                transformer.transform(source, result);
+                infoFileStream.close();
+                System.out.println("Image sequence in info.xml was updated");
+            }
+            return slidePath;
+        } catch (Exception ex) {
+            System.out.println("Cant add new slide file, error: " + ex.toString());
+            Global.showError("Can't add slide!", "Slice cant be added to project file, \nerror: "
+                    + ex.toString());
+            return "";
+        }
+    }
+
+
+    private static Node getElementForNewItemXml(int newSlideId, String name, Document doc) {
+        Element item = doc.createElement("item");
+        item.setAttribute("id", Integer.toString(newSlideId));
+        Element nameElement = doc.createElement("jmeno");
+        nameElement.insertBefore(doc.createTextNode(name), nameElement.getLastChild());
+        item.appendChild(nameElement);
+        return item;
+    }
     public static int addImage(File imageFile) {
         int imageId;
         try {
@@ -185,11 +267,7 @@ public class FileManager {
             return -1;
         }
     }
-
-
-
-    public static int addImageToZip(BufferedImage image) {
-        // get image id
+    private static int addImageToZip(BufferedImage image) {
         int newImageId;
         try {
             // get new image id //
@@ -224,13 +302,6 @@ public class FileManager {
 
             // add image to file //
             System.out.println("Adding image to project file");
-//            // export image to temp file
-//            File tempImageFile = new File(Global.tempFolder.toString()+"/"+newImageId+".png");
-//            System.out.println("Temp file: " +tempImageFile);
-//            ImageIO.write(image, "png", tempImageFile);
-//            System.out.println("Image saved to temp file.");
-
-            // save image
             Map<String, String> env = new HashMap<>();
             env.put("create", "true");
             URI uri = URI.create("jar:" + fileObject.toURI());
@@ -270,6 +341,20 @@ public class FileManager {
         System.out.println("Loading zip file");
         ZipFile zipFile = new ZipFile(fileObject);
         return zipFile;
+    }
+
+
+
+
+
+    // DEBUG - prints document as XML \\
+    private static final void printXML(Document xml) throws Exception {
+        Transformer tf = TransformerFactory.newInstance().newTransformer();
+        tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        tf.setOutputProperty(OutputKeys.INDENT, "yes");
+        Writer out = new StringWriter();
+        tf.transform(new DOMSource(xml), new StreamResult(out));
+        System.out.println(out.toString());
     }
 
 }

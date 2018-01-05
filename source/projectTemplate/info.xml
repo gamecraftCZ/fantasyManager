@@ -15,16 +15,16 @@
         </item>
     </organisations>
 
-    <other sequence="1">
-        <item id="0">
-            <jmeno>Jméno ostatního</jmeno>
-        </item>
-    </other>
-
     <places sequence="1">
         <item id="0">
             <jmeno>Jméno místa</jmeno>
         </item>
     </places>
+
+    <other sequence="1">
+        <item id="0">
+            <jmeno>Jméno ostatního</jmeno>
+        </item>
+    </other>
 
 </project>

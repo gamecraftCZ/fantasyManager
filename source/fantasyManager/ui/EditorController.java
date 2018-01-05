@@ -132,7 +132,6 @@ public class EditorController {
         } else {
             System.out.println("File was not selected");
         }
-        FileManager.saved = false;
         selectFileWindowOpened = false;
 
         System.out.println("Image added");
@@ -187,6 +186,7 @@ public class EditorController {
         scrollAnchor.getChildren().add(newButton);
 
         System.out.println("Button added to scene");
+        FileManager.saved = false;
         openButtonScene();
         System.out.println("Button added");
     }
@@ -219,6 +219,7 @@ public class EditorController {
         // set new add button position
         double buttonPositionY = leftPlus.getLayoutY();
         leftPlus.setLayoutY(buttonPositionY - 64);
+        FileManager.saved = false;
         System.out.println("Left button deleted");
     }
     public void editLeftButton(Pane button) {

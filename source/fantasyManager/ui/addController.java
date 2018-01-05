@@ -2,6 +2,7 @@ package fantasyManager.ui;
 
 import fantasyManager.FileManager;
 import fantasyManager.Global;
+import fantasyManager.SlideHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -13,9 +14,11 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
+import static fantasyManager.FileManager.addSlide;
+
 public class addController {
 
-    public static String upPath;
+    public static String upPath = "";
 
     @FXML public static TextField upSlideName;
 
@@ -39,7 +42,19 @@ public class addController {
         System.out.println("Adding new slide");
         String name = slideName.getText();
         String type = getTypeFromString(typeOfSlide.getValue().toString());
-
+        // Create new slide
+        String slidePath = FileManager.addSlide(type, name, upSlide);
+        // Open new slide
+        Global.slide = new SlideHandler(slidePath);
+        System.out.println("Opening scene: " + "editing.xml");
+        try {
+            Pane pane = FXMLLoader.load(getClass().getResource("editing.xml"));
+            MenuBar.windowRoot.getChildren().removeAll(MenuBar.windowRoot.getChildren());
+            MenuBar.windowRoot.getChildren().addAll(pane);
+        } catch (IOException ex) {
+            System.out.println("No chance to get there, error: " +ex.toString());
+            // No chance to get there until all opened scenes are available
+        }
     }
 
     public void getUpSlide() {
@@ -52,11 +67,11 @@ public class addController {
     private String getTypeFromString(String typeString) {
         switch (typeString) {
             case "Postava":
-                return "character";
+                return "characters";
             case "Místo":
-                return "place";
+                return "places";
             case "Organizace":
-                return "organisation";
+                return "organisations";
             default:
                 return "other";
         }

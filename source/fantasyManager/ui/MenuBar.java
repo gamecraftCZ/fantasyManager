@@ -44,8 +44,8 @@ public class MenuBar {
 
     public void newProject() {
         System.out.println("Creating new project...");
-        if (!FileManager.doYouWantToSave()) {
-            System.out.println("Saving project canceled or not successful");
+        if (!FileManager.saved) {
+            FileManager.save();
         }
         if (selectFileWindowOpened) {
             // System dialog for file open already opened
@@ -114,8 +114,8 @@ public class MenuBar {
         selectFileWindowOpened = false;
     }
     public void openProject() {
-        if (!FileManager.doYouWantToSave()) {
-            System.out.println("Saving project canceled or not successful");
+        if (!FileManager.saved) {
+            FileManager.save();
         }
         if (selectFileWindowOpened) {
             // System dialog for file open already opened
