@@ -136,41 +136,9 @@ public class FileManager {
         return true;
     }
 
-    public static Image getImage(int imageId) {
-        System.out.println("Getting image file " +imageId);
-        InputStream stream = null;
-        Image returnImage;
-        ZipFile zipFile = null;
-        try {
-            String path = "images/" + imageId + ".png";
-            zipFile = FileManager.getZipFile();
-            ZipEntry entry = new ZipEntry(path);
-            stream = zipFile.getInputStream(entry);
-            System.out.println("Got image file");
-            BufferedImage bufferedImage = ImageIO.read(stream);
-            System.out.println("Image loaded as buffered image");
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            System.out.println("Image loaded from buffered image");
-            returnImage = image;
-        } catch (Exception ex) {
-            System.out.println("Cant open file to read from: " + fileObject);
-            Global.showError("Chyba přístupu k souboru", "Nelze otevřít soubor projektu! chyba: \n"
-                    + ex.toString());
-            returnImage = null;
-        }
-        try {
-            stream.close();
-            zipFile.close();
-        } catch(Exception ex) {
-            System.out.println("Cant close stream! error: " +ex.toString());
-        }
-        return returnImage;
-    }
-
     public static String addSlide(String slideType, String name, String upSlide) {
         try {
-            // get sequence //
-            int sequence = 0;
+            // get newSlideId //
             // get input stream
             String path = "info.xml";
             ZipFile zipFile = getZipFile();
@@ -245,8 +213,6 @@ public class FileManager {
             return "";
         }
     }
-
-
     private static Node getElementForNewItemXml(int newSlideId, String name, Document doc) {
         Element item = doc.createElement("item");
         item.setAttribute("id", Integer.toString(newSlideId));
@@ -255,6 +221,7 @@ public class FileManager {
         item.appendChild(nameElement);
         return item;
     }
+
     public static int addImage(File imageFile) {
         int imageId;
         try {
@@ -326,7 +293,6 @@ public class FileManager {
                 System.out.println("Image sequence in info.xml was updated");
             }
 
-
             return newImageId;
         } catch (Exception ex) {
             System.out.println("Cant add image to zip, error: " +ex.toString());
@@ -335,6 +301,60 @@ public class FileManager {
             return -1;
         }
 
+    }
+    public static Image getImage(int imageId) {
+        System.out.println("Getting image file " +imageId);
+        InputStream stream = null;
+        Image returnImage;
+        ZipFile zipFile = null;
+        try {
+            String path = "images/" + imageId + ".png";
+            zipFile = FileManager.getZipFile();
+            ZipEntry entry = new ZipEntry(path);
+            stream = zipFile.getInputStream(entry);
+            System.out.println("Got image file");
+            BufferedImage bufferedImage = ImageIO.read(stream);
+            System.out.println("Image loaded as buffered image");
+            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+            System.out.println("Image loaded from buffered image");
+            returnImage = image;
+        } catch (Exception ex) {
+            System.out.println("Cant open file to read from: " + fileObject);
+            Global.showError("Chyba přístupu k souboru", "Nelze otevřít soubor projektu! chyba: \n"
+                    + ex.toString());
+            returnImage = null;
+        }
+        try {
+            zipFile.close();
+            stream.close();
+        } catch(Exception ex) {
+            System.out.println("Cant close stream! error: " +ex.toString());
+        }
+        return returnImage;
+    }
+    public static boolean deleteImage(int imageId) {
+        try {
+            // delete image file //
+            System.out.println("Deleting image from project file");
+            Map<String, String> env = new HashMap<>();
+            env.put("create", "true");
+            URI uri = URI.create("jar:" + fileObject.toURI());
+            System.out.println("Zip file path: " + uri);
+            try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
+                // delete image file
+                Path pathInZipfile = fs.getPath("images/" + imageId + ".png");
+                if (Files.exists(pathInZipfile)) {
+                    Files.delete(pathInZipfile);
+                }
+                System.out.println("Image deleted form zip file");
+            }
+            return true;
+        } catch(Exception ex) {
+            System.out.println("Cant delete image form zip, error: " + ex.toString());
+            Global.showError("Chyba odebírání obrázku", "Nelze odstravnit obrázek ze souboru projektu, " +
+                    "chyba: " + ex.toString());
+            return false;
+        }
     }
 
     public static ZipFile getZipFile() throws IOException {

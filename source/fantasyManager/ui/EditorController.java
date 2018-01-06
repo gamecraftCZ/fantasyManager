@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
+import java.util.Timer;
 
 public class EditorController {
 
@@ -26,6 +28,7 @@ public class EditorController {
     @FXML private Group imageLeft;
     @FXML private Group imageRight;
     @FXML private Group addImage;
+    @FXML private Group deleteImage;
     @FXML private Button leftPlus;
     @FXML private Button rightPlus;
     @FXML private Pane buttonRoot;
@@ -58,6 +61,7 @@ public class EditorController {
             currentImage = -1;
             imageRight.setVisible(false);
             addImage.setVisible(true);
+            deleteImage.setVisible(false);
         }
 
         //
@@ -121,7 +125,14 @@ public class EditorController {
                 System.out.println("Image added to zip");
 
                 Global.slide.images.add(imageId);
-                imageRightButton();
+                if (Global.slide.images.size() == 1) {
+                    currentImage = 0;
+                    Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
+                    image.setImage(imageVar);
+                } else {
+                    imageRightButton();
+                }
+                deleteImage.setVisible(true);
                 FileManager.saved = false;
 
                 System.out.println("Image loaded, new image id: " +imageId);
@@ -135,6 +146,44 @@ public class EditorController {
         selectFileWindowOpened = false;
 
         System.out.println("Image added");
+    }
+    public void deleteImage() {
+        System.out.println("Deleting image");
+        int imageToDeleteId = Global.slide.images.get(currentImage);
+        Global.slide.images.remove(currentImage);
+        System.out.println("Opening new image");
+        if (currentImage > 0) {
+            currentImage -= 1;
+        }
+
+        if (Global.slide.images.size() == 0) {
+            System.out.println("No images left");
+            image.setImage(null);
+            imageLeft.setVisible(false);
+            imageRight.setVisible(false);
+            addImage.setVisible(true);
+            deleteImage.setVisible(false);
+        } else {
+            System.out.println("Now image position is " + currentImage);
+            Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
+            image.setImage(imageVar);
+
+            if (currentImage == 0) {
+                imageLeft.setVisible(false);
+            } else {
+                imageLeft.setVisible(true);
+            }
+
+            if (currentImage == Global.slide.images.size() - 1) {
+                imageRight.setVisible(false);
+                addImage.setVisible(true);
+            } else {
+                imageRight.setVisible(true);
+            }
+        }
+
+        FileManager.deleteImage(imageToDeleteId);
+        System.out.println("Image deleted");
     }
 
     public void addLeftButton() throws IOException {
@@ -234,6 +283,9 @@ public class EditorController {
 
     public void infoButton() {
         System.out.println("Showing info");
+    }
+    public void editUpSlide() {
+        System.out.println("Editing up slide");
     }
 
     public void closeButtonsPane() {

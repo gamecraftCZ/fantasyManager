@@ -125,7 +125,7 @@ public class SlideHandler {
 
         // get info //
         System.out.println("Getting info");
-        expr = xPath.compile("/slide/info/item");
+        expr = xPath.compile("/slide/info[1]/item");
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         // for each info
         for (int i = 1; i < nodeList.getLength()+1; i++) {
@@ -142,24 +142,28 @@ public class SlideHandler {
         System.out.println("Getting images");
         expr = xPath.compile("/slide/images[1]/text()");
         String[] images = ((String) expr.evaluate(doc, XPathConstants.STRING)).split(" ");
-        for (int i = 0; i < images.length; i++) {
-            this.images.add(Integer.parseInt(images[i]));
-            System.out.println("Image " +i+ " = " +images[i]);
+        if (!images[0].equals("")) {
+            for (int i = 0; i < images.length; i++) {
+                this.images.add(Integer.parseInt(images[i]));
+                System.out.println("Image " + i + " = " + images[i]);
+            }
         }
 
         // get links pointing here //
         System.out.println("Getting links pointing here");
         expr = xPath.compile("/slide/linksPointingHere[1]/text()");
         String[] linksPointingHere = ((String) expr.evaluate(doc, XPathConstants.STRING)).split(" ");
-        for (int i = 0; i < linksPointingHere.length; i++) {
-            this.linksPointingHere.add(linksPointingHere[i]);
-            System.out.println("Link " +i+ " = " +linksPointingHere[i]);
+        if (!linksPointingHere[0].equals("")) {
+            for (int i = 0; i < linksPointingHere.length; i++) {
+                this.linksPointingHere.add(linksPointingHere[i]);
+                System.out.println("Link " + i + " = " + linksPointingHere[i]);
+            }
         }
 
         // get left buttons //
         System.out.println("Getting left buttons");
         try {
-            expr = xPath.compile("/slide/leftButtons/button");
+            expr = xPath.compile("/slide/leftButtons[1]/button");
             nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             // for each button
             for (int i = 1; i < nodeList.getLength() + 1; i++) {
@@ -173,7 +177,7 @@ public class SlideHandler {
         // get right buttons //
         System.out.println("Getting right buttons");
         try {
-            expr = xPath.compile("/slide/rightButtons/button");
+            expr = xPath.compile("/slide/rightButtons[1]/button");
             nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             // for each button
             for (int i = 1; i < nodeList.getLength()+1; i++) {

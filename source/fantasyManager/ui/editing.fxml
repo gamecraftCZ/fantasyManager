@@ -37,6 +37,15 @@
                      </image>
                   </ImageView>
                </graphic></Button>
+            <Button fx:id="editUpSlideButton" layoutX="230.0" mnemonicParsing="false" onMouseClicked="#editUpSlide" prefHeight="45.0" prefWidth="45.0">
+               <graphic>
+                  <ImageView fx:id="upButton1" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/edit.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
             <Button fx:id="levelBack" layoutX="35.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0">
                <graphic>
                   <ImageView fx:id="backButton" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
@@ -113,6 +122,16 @@
                   <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="9.0" layoutY="9.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../resources/plus.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group fx:id="deleteImage" layoutX="350.0">
+               <children>
+                  <Button fx:id="deleteImageButton" mnemonicParsing="false" onMouseClicked="#deleteImage" opacity="0.0" prefHeight="50.0" prefWidth="50.0" />
+                  <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="9.0" layoutY="9.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/delete.png" />
                      </image>
                   </ImageView>
                </children>
