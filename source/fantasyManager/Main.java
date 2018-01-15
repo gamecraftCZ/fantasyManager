@@ -37,6 +37,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         System.out.println("Starting fantasy manager...");
+        System.out.println("Java version: " + System.getProperty("java.version"));
 //        try {
 //            Global.tempFolder = Files.createTempDirectory("fantasyManager-");
 //        } catch (Exception ex) {

@@ -21,8 +21,8 @@ import java.util.ArrayList;
 public class Global {
 
     public static SlideHandler slide;
-    public static boolean isCurrentliEditor = true;
-    public static ArrayList<String> lastVisitedSlides;
+    public static ArrayList<String> lastVisitedSlides = new ArrayList<>();
+    public static ArrayList<BasicSlideInfo> slidesList = new ArrayList<>();
 
     public static boolean isOpeningButtonRight;
     public static int openingButtonId;
@@ -30,7 +30,9 @@ public class Global {
     public static String whatToAdd;
     public static String addTempString;
 
-    public static void slideSelectCallFunction() {}
+    public static String selectSlidePrompt;
+    public static Pane selectSlidePane;
+    public static String selectSlideSelected;
 
     public static void showError(String title, String text) {
         Stage window = new Stage();

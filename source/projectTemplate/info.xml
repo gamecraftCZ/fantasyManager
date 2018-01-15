@@ -6,24 +6,28 @@
     <characters sequence="1">
         <item id="0">
             <jmeno>Jméno postavy</jmeno>
+            <cesta>characters/0</cesta>
         </item>
     </characters>
 
     <organisations sequence="1">
         <item id="0">
             <jmeno>Jméno organizace</jmeno>
+            <cesta>organisations/0</cesta>
         </item>
     </organisations>
 
     <places sequence="1">
         <item id="0">
             <jmeno>Jméno místa</jmeno>
+            <cesta>places/0</cesta>
         </item>
     </places>
 
     <other sequence="1">
         <item id="0">
             <jmeno>Jméno ostatního</jmeno>
+            <cesta>other/0</cesta>
         </item>
     </other>
 

@@ -14,21 +14,21 @@
         </item>
     </info>
     <images>0 2 1</images>
-    <linksPointingHere>organisations/0/ characters/1/</linksPointingHere>
+    <linksPointingHere>organisations/0 characters/1</linksPointingHere>
     <leftButtons>
         <!--<button>-->
             <!--<title>Název levého tlačítka</title>-->
             <!--<subtitle>Podnázev po rozkliknutí</subtitle>-->
             <!--<type>0</type> &lt;!&ndash; 0=link to another slide, 1=text, 2=list of another buttons &ndash;&gt;-->
             <!--<text>text text text</text>-->
-            <!--<link>characters/1/</link>-->
+            <!--<link>characters/1</link>-->
             <!--<leftButtons>-->
                 <!--<button>-->
                     <!--<title>Název levého tlačítka</title>-->
                     <!--<subtitle>Podnázev po rozkliknutí</subtitle>-->
                     <!--<type>0</type> &lt;!&ndash; 0=link to another slide, 1=text, 2=list of another button (not on this button layer) &ndash;&gt;7-->
                     <!--<text>text left text</text>-->
-                    <!--<link>characters/1/</link>-->
+                    <!--<link>characters/1</link>-->
                     <!--<leftButtons></leftButtons>-->
                     <!--<rightButtons></rightButtons>-->
                 <!--</button>-->
@@ -39,7 +39,7 @@
                     <!--<subtitle>Podnázev po rozkliknutí</subtitle>-->
                     <!--<type>0</type> &lt;!&ndash; 0=link to another slide, 1=text, 2=list of another button (not on this button layer) &ndash;&gt;-->
                     <!--<text>text left text</text>-->
-                    <!--<link>places/0/</link>-->
+                    <!--<link>places/0</link>-->
                     <!--<leftButtons></leftButtons>-->
                     <!--<rightButtons></rightButtons>-->
                 <!--</button>-->
@@ -52,14 +52,14 @@
             <subtitle>Podnázev po rozkliknutí</subtitle>
             <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another buttons -->
             <text>text text text</text>
-            <link>characters/1/</link>
+            <link>characters/1</link>
             <leftButtons>
                 <button>
                     <title>Název levého tlačítka</title>
                     <subtitle>Podnázev po rozkliknutí</subtitle>
                     <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another button (not on this button layer) -->7
                     <text>text left text</text>
-                    <link>characters/1/</link>
+                    <link>characters/1</link>
                     <leftButtons></leftButtons>
                     <rightButtons></rightButtons>
                 </button>
@@ -70,7 +70,7 @@
                     <subtitle>Podnázev po rozkliknutí</subtitle>
                     <type>0</type> <!-- 0=link to another slide, 1=text, 2=list of another button (not on this button layer) -->
                     <text>text left text</text>
-                    <link>places/0/</link>
+                    <link>places/0</link>
                     <leftButtons></leftButtons>
                     <rightButtons></rightButtons>
                 </button>

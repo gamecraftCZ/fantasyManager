@@ -98,8 +98,13 @@ public class FileManager {
 
     }
     public static boolean openProjectFile(File file) {
-        //open project file into zipFile(handler)
+        //open project file from zipFile(handler)
         System.out.println("Opening project file: " + file);
+        loadSlidesBasicInfo();
+        return true;
+    }
+    private static boolean loadSlidesBasicInfo() {
+        System.out.println("Loading slides basic info");
         return true;
     }
     public static boolean save() {
@@ -191,7 +196,7 @@ public class FileManager {
                 System.out.println("Slide saved to zip file");
 
                 // add slide to info.xml
-                slideSequence.appendChild(getElementForNewItemXml(newSlideId, name, doc));
+                slideSequence.appendChild(getElementForNewItemXml(newSlideId, name, slidePath, doc));
                 // add 1 to slide sequence
                 slideSequence.getAttributes().getNamedItem("sequence").setNodeValue("" + (newSlideId + 1));
                 // write the content into xml file
@@ -204,6 +209,7 @@ public class FileManager {
                 transformer.transform(source, result);
                 infoFileStream.close();
                 System.out.println("Image sequence in info.xml was updated");
+                Global.slidesList.add(new BasicSlideInfo(name, slidePath, slideType));
             }
             return slidePath;
         } catch (Exception ex) {
@@ -213,12 +219,18 @@ public class FileManager {
             return "";
         }
     }
-    private static Node getElementForNewItemXml(int newSlideId, String name, Document doc) {
+    private static Node getElementForNewItemXml(int newSlideId, String name, String path, Document doc) {
         Element item = doc.createElement("item");
         item.setAttribute("id", Integer.toString(newSlideId));
+
         Element nameElement = doc.createElement("jmeno");
         nameElement.insertBefore(doc.createTextNode(name), nameElement.getLastChild());
         item.appendChild(nameElement);
+
+        Element pathElement = doc.createElement("cesta");
+        pathElement.insertBefore(doc.createTextNode(path), pathElement.getLastChild());
+        item.appendChild(pathElement);
+
         return item;
     }
 
@@ -368,7 +380,7 @@ public class FileManager {
 
 
     // DEBUG - prints document as XML \\
-    private static final void printXML(Document xml) throws Exception {
+    private static void printXML(Document xml) throws Exception {
         Transformer tf = TransformerFactory.newInstance().newTransformer();
         tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         tf.setOutputProperty(OutputKeys.INDENT, "yes");
