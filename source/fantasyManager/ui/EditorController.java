@@ -41,31 +41,43 @@ public class EditorController {
 
     @FXML public void initialize() {
         System.out.println("Initializing editor");
+        try {
 
-        // set name
-        name.setText(Global.slide.name);
+            // set name
+            name.setText(Global.slide.name);
 
-        // set image buttons and image
-        imageLeft.setVisible(false);
-        if (!Global.slide.images.isEmpty()) {
-            currentImage = 0;
-            image.setImage(FileManager.getImage(Global.slide.images.get(0)));
-            if (Global.slide.images.size() > 1) {
-                imageRight.setVisible(true);
-                addImage.setVisible(false);
+            // set image buttons and image
+            imageLeft.setVisible(false);
+            if (!Global.slide.images.isEmpty()) {
+                currentImage = 0;
+                image.setImage(FileManager.getImage(Global.slide.images.get(0)));
+                if (Global.slide.images.size() > 1) {
+                    imageRight.setVisible(true);
+                    addImage.setVisible(false);
+                } else {
+                    imageRight.setVisible(false);
+                    addImage.setVisible(true);
+                }
             } else {
+                currentImage = -1;
                 imageRight.setVisible(false);
                 addImage.setVisible(true);
+                deleteImage.setVisible(false);
             }
-        } else {
-            currentImage = -1;
-            imageRight.setVisible(false);
-            addImage.setVisible(true);
-            deleteImage.setVisible(false);
+
+            // load buttons \\
+            // left buttons
+            for (UserButton button : Global.slide.leftButtons) {
+                addLeftButtonToScene(button.buttonId);
+            }
+            // right buttons
+            for (UserButton button : Global.slide.rightButtons) {
+                addRightButtonToScene(button.buttonId);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Cant initialize editor controller, error: " + ex.toString());
         }
-
-        //
-
         System.out.println("Editor initialized");
     }
 
@@ -192,7 +204,7 @@ public class EditorController {
         leftPlus.setLayoutY(buttonPositionY + 64);
         if (Global.slide.leftButtons.size() >= Global.slide.rightButtons.size()) {
             // resize scroll anchor
-            double newAnchorSize = 64d + 0d + Global.slide.leftButtons.size() * 64d;
+            double newAnchorSize = 64d + 74d + Global.slide.leftButtons.size() * 64d;
             System.out.println("New anchor size = " +newAnchorSize);
             scrollAnchor.setPrefHeight(newAnchorSize);
         }
@@ -275,11 +287,105 @@ public class EditorController {
         System.out.println("Opening edit button");
         String buttonIdString = button.getId();
         int buttonId = Integer.parseInt(buttonIdString.substring(10, buttonIdString.length()));
+        Global.isOpeningButtonRight = false;
         Global.openingButtonId = buttonId;
         openButtonScene();
         System.out.println("Editing button");
     }
-    // add, delete, edit right button
+    public void addRightButton() throws IOException {
+        System.out.println("Adding button to right");
+        double buttonPositionY = rightPlus.getLayoutY();
+        rightPlus.setLayoutY(buttonPositionY + 64);
+        if (Global.slide.rightButtons.size() >= Global.slide.leftButtons.size()) {
+            // resize scroll anchor
+            double newAnchorSize = 64d + 74d + Global.slide.rightButtons.size() * 64d;
+            System.out.println("New anchor size = " +newAnchorSize);
+            scrollAnchor.setPrefHeight(newAnchorSize);
+        }
+        System.out.println("Add right button moved down");
+
+        // get new button id
+        int newButtonId;
+        if (Global.slide.rightButtons.isEmpty()) {
+            newButtonId = 0;
+        } else {
+            newButtonId = (Global.slide.rightButtons.get(Global.slide.rightButtons.size() - 1).buttonId + 1);
+        }
+        // add button to scene
+        Pane newButton = FXMLLoader.load(getClass().getResource("clickableButtonEditing.fxml"));
+        // set new Button Pane
+        newButton.setLayoutX(244);
+        newButton.setLayoutY(buttonPositionY);
+        newButton.setId("rightButton" + (newButtonId));
+        System.out.println("new right button id is: " + (newButtonId));
+        // set new Button button
+        Button newButLeftPart = new Button("right" + (newButtonId));
+        newButLeftPart.setPrefSize(115, 50);
+        newButLeftPart.setFont(new Font(23));
+        newButton.getChildren().set(0, newButLeftPart);
+        newButton.getChildren().get(0).setId("rightButtonButton" + (newButtonId));
+        // set new Button edit
+        newButton.getChildren().get(1).setId("rightButtonEdit" + (newButtonId));
+        newButton.getChildren().get(1).setOnMouseClicked(event -> editRightButton(newButton));
+        // set new Button close
+        newButton.getChildren().get(2).setId("rightButtonClose" + (newButtonId));
+        newButton.getChildren().get(2).setOnMouseClicked(event -> deleteRightButton(newButton));
+        // add button to list of left buttons
+        UserButton userButtonObj = new UserButton(newButtonId);
+        userButtonObj.buttonPane = newButton;
+        userButtonObj.buttonClickable = newButLeftPart;
+        Global.slide.rightButtons.add(userButtonObj);
+        Global.isOpeningButtonRight = true;
+        Global.openingButtonId = Global.slide.rightButtons.get(Global.slide.rightButtons.size() - 1).buttonId;
+        System.out.println("Button added to scene and slide object");
+        scrollAnchor.getChildren().add(newButton);
+
+        System.out.println("Button added to scene");
+        FileManager.saved = false;
+        openButtonScene();
+        System.out.println("Button added");
+    }
+    public void deleteRightButton(Pane button) {
+        System.out.println("deleting button: " + button.getId());
+        // get button id
+        String buttonIdString = button.getId();
+        int buttonId = Integer.parseInt(buttonIdString.substring(11, buttonIdString.length()));
+        // remove button element
+        scrollAnchor.getChildren().removeAll(button);
+        // move other buttons up
+        UserButton curButton;
+        int buttonIndex = 0;
+        for (int i = 0; i < Global.slide.rightButtons.size(); i++) {
+            curButton = Global.slide.rightButtons.get(i);
+            if (curButton.buttonId == buttonId) {
+                buttonIndex = i;
+                continue;
+            }
+            if (curButton.buttonId > buttonId) {
+                curButton.buttonPane.setLayoutY(curButton.buttonPane.getLayoutY() - 64d);
+            }
+        }
+        // remove button from left buttons list
+        Global.slide.rightButtons.remove(buttonIndex);
+        // set new anchor size
+        double newAnchorSize = 64d + 0d + Global.slide.rightButtons.size() * 64d;
+        System.out.println("New anchor size = " +newAnchorSize);
+        scrollAnchor.setPrefHeight(newAnchorSize);
+        // set new add button position
+        double buttonPositionY = rightPlus.getLayoutY();
+        rightPlus.setLayoutY(buttonPositionY - 64);
+        FileManager.saved = false;
+        System.out.println("Left button deleted");
+    }
+    public void editRightButton(Pane button) {
+        System.out.println("Opening edit button");
+        String buttonIdString = button.getId();
+        int buttonId = Integer.parseInt(buttonIdString.substring(11, buttonIdString.length()));
+        Global.isOpeningButtonRight = true;
+        Global.openingButtonId = buttonId;
+        openButtonScene();
+        System.out.println("Editing button");
+    }
 
     public void infoButton() {
         System.out.println("Showing info");
@@ -303,6 +409,87 @@ public class EditorController {
         } catch (IOException ex) {
             System.out.println("No chance to get there, error: " +ex.toString());
             // No chance to get there until all opened scenes are in available
+        }
+    }
+
+    private void addLeftButtonToScene(int newButtonId) {
+        try {
+            System.out.println("Adding left button to scene");
+            double buttonPositionY = leftPlus.getLayoutY();
+            leftPlus.setLayoutY(buttonPositionY + 64);
+            if (Global.slide.leftButtons.size() >= Global.slide.rightButtons.size()) {
+                // resize scroll anchor
+                double newAnchorSize = 64d + 0d + Global.slide.leftButtons.size() * 64d;
+                System.out.println("New anchor size = " + newAnchorSize);
+                scrollAnchor.setPrefHeight(newAnchorSize);
+            }
+
+            // add button to scene
+            Pane newButton = FXMLLoader.load(getClass().getResource("clickableButtonEditing.fxml"));
+            // set new Button Pane
+            newButton.setLayoutX(16);
+            newButton.setLayoutY(buttonPositionY);
+            newButton.setId("leftButton" + (newButtonId));
+            System.out.println("new left button id is: " + (newButtonId));
+            // set new Button button
+            Button newButLeftPart = new Button("left" + (newButtonId));
+            newButLeftPart.setPrefSize(115, 50);
+            newButLeftPart.setFont(new Font(23));
+            newButton.getChildren().set(0, newButLeftPart);
+            newButton.getChildren().get(0).setId("leftButtonButton" + (newButtonId));
+            // set new Button edit
+            newButton.getChildren().get(1).setId("leftButtonEdit" + (newButtonId));
+            newButton.getChildren().get(1).setOnMouseClicked(event -> editLeftButton(newButton));
+            // set new Button close
+            newButton.getChildren().get(2).setId("leftButtonClose" + (newButtonId));
+            newButton.getChildren().get(2).setOnMouseClicked(event -> deleteLeftButton(newButton));
+            // add to scene
+            scrollAnchor.getChildren().add(newButton);
+            // add button objects to variable
+            Global.slide.leftButtons.get(newButtonId).buttonPane = newButton;
+            Global.slide.leftButtons.get(newButtonId).buttonClickable = newButLeftPart;
+        } catch (Exception ex) {
+            System.out.println("Can't add left button in initialization, error: " + ex.toString());
+        }
+    }
+    private void addRightButtonToScene(int newButtonId) {
+        try {
+            System.out.println("Adding right button to scene");
+            double buttonPositionY = rightPlus.getLayoutY();
+            rightPlus.setLayoutY(buttonPositionY + 64);
+            if (Global.slide.rightButtons.size() >= Global.slide.leftButtons.size()) {
+                // resize scroll anchor
+                double newAnchorSize = 64d + 0d + Global.slide.rightButtons.size() * 64d;
+                System.out.println("New anchor size = " + newAnchorSize);
+                scrollAnchor.setPrefHeight(newAnchorSize);
+            }
+
+            // add button to scene
+            Pane newButton = FXMLLoader.load(getClass().getResource("clickableButtonEditing.fxml"));
+            // set new Button Pane
+            newButton.setLayoutX(250);
+            newButton.setLayoutY(buttonPositionY);
+            newButton.setId("rightButton" + (newButtonId));
+            System.out.println("new right button id is: " + (newButtonId));
+            // set new Button button
+            Button newButRightPart = new Button("right" + (newButtonId));
+            newButRightPart.setPrefSize(115, 50);
+            newButRightPart.setFont(new Font(23));
+            newButton.getChildren().set(0, newButRightPart);
+            newButton.getChildren().get(0).setId("leftButtonButton" + (newButtonId));
+            // set new Button edit
+            newButton.getChildren().get(1).setId("leftButtonEdit" + (newButtonId));
+            newButton.getChildren().get(1).setOnMouseClicked(event -> editRightButton(newButton));
+            // set new Button close
+            newButton.getChildren().get(2).setId("leftButtonClose" + (newButtonId));
+            newButton.getChildren().get(2).setOnMouseClicked(event -> deleteRightButton(newButton));
+            // add new button to scene
+            scrollAnchor.getChildren().add(newButton);
+            // add button objects to variable
+            Global.slide.rightButtons.get(newButtonId).buttonPane = newButton;
+            Global.slide.rightButtons.get(newButtonId).buttonClickable = newButRightPart;
+        } catch (Exception ex) {
+            System.out.println("Can't add left button in initialization, error: " + ex.toString());
         }
     }
 

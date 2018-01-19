@@ -1,25 +1,29 @@
 package fantasyManager.ui;
 
 import fantasyManager.BasicSlideInfo;
-import fantasyManager.BasicSlideInfoWithButton;
 import fantasyManager.Global;
-import fantasyManager.JavafxExtendedFunctions;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.util.ArrayList;
+import java.awt.*;
 
 public class SelectSlide {
 
@@ -37,7 +41,7 @@ public class SelectSlide {
         selectPane = Global.selectSlidePane;
         promptText.setText(Global.selectSlidePrompt);
 
-        // Listen for Search field changes
+        // Listen for Search field changes \\
         searchField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable,
@@ -46,7 +50,43 @@ public class SelectSlide {
             }
         });
 
-        // show all
+        // initialize table view \\
+        searchResultsColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        searchResultsColumnValue.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        Callback<TableColumn<BasicSlideInfo, String>, TableCell<BasicSlideInfo, String>> buttonCellFactory
+                = new Callback<TableColumn<BasicSlideInfo, String>, TableCell<BasicSlideInfo, String>>() {
+                    @Override
+                    public TableCell call(final TableColumn<BasicSlideInfo, String> param) {
+                        final TableCell<BasicSlideInfo, String> cell = new TableCell<BasicSlideInfo, String>() {
+
+                            final Button btn = new Button("->");
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    btn.setOnAction(event -> {
+                                        BasicSlideInfo slideInfo = getTableView().getItems().get(getIndex());
+                                        System.out.println("Info name of slide to added: " + slideInfo.name);
+                                        select(slideInfo.path);
+                                    });
+                                    setGraphic(btn);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        searchResultsColumnSelect.setCellFactory(buttonCellFactory);
+
+
+
+        // show all slides
         newSearch("");
     }
 
@@ -69,23 +109,13 @@ public class SelectSlide {
         System.out.println("Searching for: \"" + searchText + "\"");
 
         // search for slides
-        Button buttonPrefab = new Button("+");
-        try {
-            buttonPrefab = FXMLLoader.load(getClass().getResource("addButton.fxml"));
-        } catch (Exception ex) {
-            System.out.println("No way to get there, error: " + ex.toString());
-        }
-        buttonPrefab.setOnMouseClicked(e -> selectButton(e));
-        ObservableList<BasicSlideInfoWithButton> searchMatches = FXCollections.observableArrayList();
+        ObservableList<BasicSlideInfo> searchMatches = FXCollections.observableArrayList();
         try {
             for (BasicSlideInfo slide : Global.slidesList) {
                 if (slide.name.contains(searchText)) {
                     System.out.println("Slide match search criteria: \"" + slide.name + "\"");
-                    Button fxButton = FXMLLoader.load(getClass().getResource("addButton.fxml"));
-                        //JavafxExtendedFunctions.duplicateButton(buttonPrefab);
-                    fxButton.setId("but-" + slide.path);
-                    BasicSlideInfoWithButton searchedSlide =
-                            new BasicSlideInfoWithButton(slide.name, slide.path, getNameOfType(slide.name), fxButton);
+                    BasicSlideInfo searchedSlide =
+                            new BasicSlideInfo(slide.name, slide.path, getNameOfType(slide.type));
                     searchMatches.add(searchedSlide);
                 }
             }
@@ -94,119 +124,13 @@ public class SelectSlide {
         }
 
         // add search matches to scene //
-        // set up table columns
-        searchResultsColumnName.setCellValueFactory(
-                new PropertyValueFactory<BasicSlideInfoWithButton, String>("name") );
-        searchResultsColumnValue.setCellValueFactory(
-                new PropertyValueFactory<BasicSlideInfoWithButton, String>("type") );
-//        searchResultsColumnSelect.setCellValueFactory(
-//                new PropertyValueFactory<BasicSlideInfoWithButton, Button>("fxButton") );
+        searchResultsTableView.setItems(searchMatches);
 
-
-
-
-        ObservableList<BasicSlideInfoWithButton> data
-                = FXCollections.observableArrayList(
-                new BasicSlideInfoWithButton("Jacob", "Smith", "typ", new Button("+")),
-                new BasicSlideInfoWithButton("Isabella", "Johnson", "typ", new Button("+")),
-                new BasicSlideInfoWithButton("Ethan", "Williams", "typ", new Button("+")),
-                new BasicSlideInfoWithButton("Emma", "Jones", "typ", new Button("+")),
-                new BasicSlideInfoWithButton("Michael", "Brown", "typ", new Button("+"))
-        );
-
-//        TableColumn firstNameCol = new TableColumn("First Name");
-//        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-//
-//        TableColumn lastNameCol = new TableColumn("Last Name");
-//        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-//
-//        TableColumn actionCol = new TableColumn("Action");
-        searchResultsColumnSelect.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-
-        Callback<TableColumn<BasicSlideInfoWithButton, String>, TableCell<BasicSlideInfoWithButton, String>> cellFactory
-                = //
-                new Callback<TableColumn<BasicSlideInfoWithButton, String>, TableCell<BasicSlideInfoWithButton, String>>() {
-                    @Override
-                    public TableCell call(final TableColumn<BasicSlideInfoWithButton, String> param) {
-                        final TableCell<BasicSlideInfoWithButton, String> cell = new TableCell<BasicSlideInfoWithButton, String>() {
-
-                            final Button btn = new Button("+");
-
-                            @Override
-                            public void updateItem(String item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (empty) {
-                                    setGraphic(null);
-                                    setText(null);
-                                } else {
-                                    btn.setOnAction(event -> {
-                                        BasicSlideInfoWithButton info = getTableView().getItems().get(getIndex());
-                                        System.out.println(info.getName()
-                                                + "   " + info.getPath()
-                                                + "   " + info.getType());
-                                    });
-                                    setGraphic(btn);
-                                    setText(null);
-                                }
-                            }
-                        };
-                        return cell;
-                    }
-                };
-
-        searchResultsColumnSelect.setCellFactory(cellFactory);
-
-
-        searchResultsTableView.setItems(data);
-
-
-
-
-
-//        searchResultsColumnSelect.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-//
-//        Callback<TableColumn<BasicSlideInfoWithButton, String>, TableCell<BasicSlideInfoWithButton, String>> cellFactory
-//                = //
-//                new Callback<TableColumn<BasicSlideInfoWithButton, String>, TableCell<BasicSlideInfoWithButton, String>>() {
-//                    @Override
-//                    public TableCell call(final TableColumn<BasicSlideInfoWithButton, String> param) {
-//                        final TableCell<BasicSlideInfoWithButton, String> cell = new TableCell<BasicSlideInfoWithButton, String>() {
-//
-//                            final Button btn = new Button("+");
-//
-//                            @Override
-//                            public void updateItem(String item, boolean empty) {
-//                                super.updateItem(item, empty);
-//                                if (empty) {
-//                                    setGraphic(null);
-//                                    setText(null);
-//                                } else {
-//                                    btn.setOnAction(event -> {
-//                                        BasicSlideInfoWithButton info = getTableView().getItems().get(getIndex());
-//                                        System.out.println(info.getName()
-//                                                + "   " + info.getType()
-//                                                + "   " + info.getPath());
-//                                    });
-//                                    setGraphic(btn);
-//                                    setText(null);
-//                                }
-//                            }
-//                        };
-//                        return cell;
-//                    }
-//                };
-//
-//        searchResultsColumnSelect.setCellFactory(cellFactory);
-
-
-
-        // add to table
-//        searchResultsTableView.setItems(searchMatches);
 
         System.out.println("Search completed, results count: " + searchMatches.size());
     }
+
     private String getNameOfType(String type) {
-        System.out.println("Getting name for type: \"" + type + "\"");
         switch (type) {
             case "characters":
                 return "Postava";
@@ -218,11 +142,6 @@ public class SelectSlide {
                 return "Ostatní";
         }
 
-    }
-
-    private void selectButton(MouseEvent e) {
-        String path = e.getButton().name().substring(4);
-        select(path);
     }
 
 }

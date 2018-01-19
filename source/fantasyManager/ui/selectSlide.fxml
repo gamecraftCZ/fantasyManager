@@ -24,8 +24,8 @@
         <TableView fx:id="searchResultsTableView" layoutX="50.0" layoutY="90.0" pickOnBounds="false" prefHeight="460.0" prefWidth="500.0">
             <columns>
                 <TableColumn fx:id="searchResultsColumnName" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="300.0" resizable="false" sortable="false" text="Název" />
-                <TableColumn fx:id="searchResultsColumnValue" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" resizable="false" sortable="false" text="typ" />
-                <TableColumn fx:id="searchResultsColumnSelect" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="-1.0" resizable="false" sortable="false" />
+                <TableColumn fx:id="searchResultsColumnValue" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" resizable="false" sortable="false" text="Typ" />
+                <TableColumn fx:id="searchResultsColumnSelect" editable="false" maxWidth="1.7976931348623157E308" minWidth="37.0" prefWidth="37.0" resizable="false" sortable="false" />
             </columns>
          <opaqueInsets>
             <Insets />

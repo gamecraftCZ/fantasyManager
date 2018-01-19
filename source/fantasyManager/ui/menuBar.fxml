@@ -59,7 +59,7 @@
                            </toggleGroup></RadioMenuItem>
                         <RadioMenuItem fx:id="editMode" mnemonicParsing="false" onAction="#switchToEdit" selected="true" text="Režim úpravy" toggleGroup="$editOrViewSelect" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="goToButton" disable="true" mnemonicParsing="false" text="Jít na ..." />
+                        <MenuItem fx:id="goToButton" disable="true" mnemonicParsing="false" onAction="#openGoTo" text="Jít na ..." />
                   </items>
                 </Menu>
               </menus>

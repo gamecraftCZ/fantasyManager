@@ -1,7 +1,11 @@
 package fantasyManager.ui;
 
+import fantasyManager.BasicSlideInfo;
 import fantasyManager.FileManager;
 import fantasyManager.Global;
+import fantasyManager.SlideHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
@@ -26,6 +30,7 @@ public class MenuBar {
     @FXML private MenuItem addOther;
     @FXML private MenuItem goToButton;
     @FXML private Pane popOutMenu;
+    private String openedInPopOutMenu;
 
     @FXML public void initialize() {
         // testing - delete \/
@@ -37,9 +42,17 @@ public class MenuBar {
         System.out.println("Scene loaded");
         projectLoadedDisableMenuButtons(false);
         // testing - delete /\
+
         System.out.println("Menu bar initialization");
         windowRoot = root;
         popOutMenuRoot = popOutMenu;
+        popOutMenu.visibleProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(final ObservableValue<? extends Boolean> observableValue, final Boolean aBoolean,
+                                final Boolean aBoolean2) {
+                if (aBoolean) popOutMenuClosed(); // set invisible -> path was selected
+            }
+        });
     }
 
     public void newProject() {
@@ -204,9 +217,31 @@ public class MenuBar {
 
     public void openGoTo() {
         System.out.println("Opening go to menu");
+
+        Global.selectSlidePrompt = "Jít na";
+        Global.selectSlidePane = popOutMenu;
+        openPopOutMenu("selectSlide.fxml");
+
+        System.out.println("Go to menu opened");
     }
 
-
+    private void popOutMenuClosed() {
+        System.out.println("Pop out menu closed");
+        if (openedInPopOutMenu.equals("selectSlide.fxml")) {
+            System.out.println("Closed select slide");
+            String goToPath = Global.selectSlideSelected;
+            System.out.println("Go to path: " + goToPath);
+            if (goToPath != null) {
+                if (selectedEditMode) {
+                    FileManager.save();
+                    Global.slide = new SlideHandler(goToPath);
+                    openNewScene("editing.fxml");
+                } else {
+                    openNewScene("view.fxml");
+                }
+            }
+        }
+    }
 
 
     private void projectLoadedDisableMenuButtons(boolean disable) {
@@ -240,6 +275,7 @@ public class MenuBar {
             System.out.println("No chance to get there, error: " +ex.toString());
             // No chance to get there until all opened scenes are available
         }
+        openedInPopOutMenu = menuPath;
     }
 
 }

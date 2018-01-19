@@ -166,7 +166,7 @@ public class SlideHandler {
             expr = xPath.compile("/slide/leftButtons[1]/button");
             nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             // for each button
-            for (int i = 1; i < nodeList.getLength() + 1; i++) {
+            for (int i = 0; i < nodeList.getLength() + 1; i++) {
                 System.out.println("Getting info for left button " + i);
                 leftButtons.add(getButtonInfo(xPath, doc, "/slide/leftButtons/button[" + i + "]", i));
             }
@@ -180,7 +180,7 @@ public class SlideHandler {
             expr = xPath.compile("/slide/rightButtons[1]/button");
             nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             // for each button
-            for (int i = 1; i < nodeList.getLength()+1; i++) {
+            for (int i = 0; i < nodeList.getLength()+1; i++) {
                 System.out.println("Getting info for right button " +i);
                 rightButtons.add(getButtonInfo(xPath, doc, "/slide/rightButtons/button[" +i+ "]", i));
             }
