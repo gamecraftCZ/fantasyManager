@@ -1,10 +1,13 @@
 package fantasyManager;
 
+import java.util.ArrayList;
+
 public class BasicSlideInfo {
 
     public String name;
     public String path;
     public String type;
+    public ArrayList<String> slidesPointingHere = new ArrayList<>();
 
     public BasicSlideInfo() {
         this.name = "";

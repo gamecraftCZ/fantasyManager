@@ -109,15 +109,14 @@ public class FileManager {
     }
     public static boolean save() {
         System.out.println("Saving project...");
-        // save slide file //
-        System.out.println("Adding slide to project file");
         String slidePath = Global.slide.path;
         Map<String, String> env = new HashMap<>();
         env.put("create", "true");
         URI uri = URI.create("jar:" + fileObject.toURI());
         System.out.println("Zip file path: " + uri);
         try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
-            // add slide to file
+            // add slide to file //
+            System.out.println("Saving slide");
             Path pathInZipfile = fs.getPath(slidePath);
             Files.delete(pathInZipfile);
             OutputStream slideOutputStream = Files.newOutputStream(pathInZipfile);
@@ -129,6 +128,41 @@ public class FileManager {
             transformer.transform(source, result);
             slideOutputStream.close();
             System.out.println("Slide saved to zip file");
+
+            // save basic slides info to file // // //
+            // load basic slides info // //
+            System.out.println("Loading info.xml");
+            InputStream infoInput = Files.newInputStream(fs.getPath("info.xml"));
+            // create xml parser //
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document infoDoc = builder.parse(infoInput);
+            System.out.println("modifying info.xml doc");
+            // edit document //
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xPath = xpathFactory.newXPath();
+            XPathExpression expr;
+            // edit characters
+            expr = xPath.compile("/project/characters[1]");
+            Node charactersInfoNode = (Node) expr.evaluate(infoDoc, XPathConstants.NODE);
+            //dodělat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!dodělat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // close stream //
+            infoInput.close();
+            System.out.println("new info.xml fil content: ");
+            printXML(infoDoc);
+
+            // save modified slides info // //
+            System.out.println("Saving info.xml");
+            OutputStream infoOutput = Files.newOutputStream(fs.getPath("info.xml"));
+            Transformer infoTransformer = TransformerFactory.newInstance().newTransformer();
+            DOMSource infoSource = new DOMSource(slideDoc);
+            StreamResult infoResult = new StreamResult(slideOutputStream);
+            transformer.transform(infoSource, infoResult);
+            infoOutput.close();
+
+            System.out.println("info saved to file");
+
             return true;
         } catch (Exception ex) {
             System.out.println("Saving error: " + ex.toString());
@@ -183,8 +217,8 @@ public class FileManager {
             System.out.println("Zip file path: " + uri);
             try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
                 // add slide to file
-                Path pathInZipfile = fs.getPath(slidePath);
-                OutputStream slideOutputStream = Files.newOutputStream(pathInZipfile);
+                Path pathInZipFile = fs.getPath(slidePath);
+                OutputStream slideOutputStream = Files.newOutputStream(pathInZipFile);
                 SlideHandler slide = new SlideHandler(name, upSlide);
                 Document slideDoc = slide.toDocument();
                 printXML(slideDoc);

@@ -107,7 +107,7 @@ public class addController {
                 upSlideName.setText("Hlavní rozcestník");
             } else {
                 for (BasicSlideInfo slide : Global.slidesList) {
-                    if (slide.path == upSlidePath) {
+                    if (slide.path.equals(upSlidePath)) {
                         upSlideName.setText(slide.name);
                         break;
                     }

@@ -1,15 +1,21 @@
 package fantasyManager.ui;
 
+import com.sun.jna.platform.win32.GL;
+import fantasyManager.BasicSlideInfo;
 import fantasyManager.FileManager;
 import fantasyManager.Global;
 import fantasyManager.UserButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+
+import java.io.IOException;
 
 
 public class ButtonPaneController {
@@ -21,6 +27,8 @@ public class ButtonPaneController {
     @FXML private Pane buttons;
     @FXML private Pane link;
     @FXML private TextArea buttonTextArea;
+    @FXML private Pane selectSlidePathRoot;
+    @FXML private Label linkName;
 
     private boolean isButtonRight;
     private int buttonId;
@@ -28,6 +36,13 @@ public class ButtonPaneController {
     @FXML public void initialize() {
         System.out.println("Initializing button editor");
         try {
+            selectSlidePathRoot.visibleProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(final ObservableValue<? extends Boolean> observableValue, final Boolean aBoolean,
+                                    final Boolean aBoolean2) {
+                    if (aBoolean) pathSelected(); // set invisible -> path was selected
+                }
+            });
 
             isButtonRight = Global.isOpeningButtonRight;
             buttonId = Global.openingButtonId;
@@ -236,6 +251,83 @@ public class ButtonPaneController {
             }
         }
         FileManager.saved = false;
+    }
+
+    public void getLink() {
+        System.out.println("Getting up slide for new slide");
+        openUpSlideAskWindow();
+    }
+    private void pathSelected() {
+        System.out.println("Link selected: " + Global.selectSlideSelected);
+        if (Global.selectSlideSelected != null) {
+            // Path link is set, set its name to linkName object for user
+            String linkPath = Global.selectSlideSelected;
+            if (linkPath.isEmpty()) {
+                linkName.setText("Hlavní rozcestník");
+            } else {
+                for (BasicSlideInfo slide : Global.slidesList) {
+                    if (slide.path.equals(linkPath)) {
+                        linkName.setText(slide.name);
+                        break;
+                    }
+                }
+            }
+
+            // Set slidePointingHere to new slide //
+            // Remove old
+            for (BasicSlideInfo slide : Global.slidesList) {
+                for (int i = 0; i < slide.slidesPointingHere.size(); i++) {
+                    if (slide.slidesPointingHere.get(i).equals(linkPath)) {
+                        System.out.println("Removing link pointing here");
+                        slide.slidesPointingHere.remove(i);
+                        break;
+                    }
+                }
+            }
+            // Add new
+            for (BasicSlideInfo slide : Global.slidesList) {
+                if (slide.path.equals(linkPath)) {
+                    System.out.println("Adding link pointing here: " + linkPath);
+                    slide.slidesPointingHere.add(linkPath);
+                    break;
+                }
+            }
+
+
+            // Set path to button object
+            if (isButtonRight) {
+                for (UserButton button : Global.slide.rightButtons) {
+                    if (button.buttonId == buttonId) {
+                        button.linkTarget = linkPath;
+                        break;
+                    }
+                }
+            } else {
+                for (UserButton button : Global.slide.leftButtons) {
+                    if (button.buttonId == buttonId) {
+                        button.linkTarget = linkPath;
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void openUpSlideAskWindow() {
+        String scenePath = "selectSlide.fxml";
+        System.out.println("Opening up slide ask window: " + scenePath);
+        try {
+            Global.selectSlidePrompt = "Zvol nadřazené";
+            Global.selectSlidePane = selectSlidePathRoot;
+            Pane pane = FXMLLoader.load(getClass().getResource(scenePath));
+            selectSlidePathRoot.getChildren().removeAll(selectSlidePathRoot.getChildren());
+            selectSlidePathRoot.getChildren().addAll(pane);
+            selectSlidePathRoot.setVisible(true);
+        } catch (IOException ex) {
+            System.out.println("No chance to get there, error: " +ex.toString());
+            // No chance to get there until all opened scenes are available
+        }
     }
 
 

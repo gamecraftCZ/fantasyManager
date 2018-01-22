@@ -7,6 +7,7 @@
         <item id="0">
             <jmeno>Jméno postavy</jmeno>
             <cesta>characters/0</cesta>
+            <slidesPointingHere></slidesPointingHere>
         </item>
     </characters>
 
@@ -14,6 +15,7 @@
         <item id="0">
             <jmeno>Jméno organizace</jmeno>
             <cesta>organisations/0</cesta>
+            <slidesPointingHere></slidesPointingHere>
         </item>
     </organisations>
 
@@ -21,6 +23,7 @@
         <item id="0">
             <jmeno>Jméno místa</jmeno>
             <cesta>places/0</cesta>
+            <slidesPointingHere></slidesPointingHere>
         </item>
     </places>
 
@@ -28,6 +31,7 @@
         <item id="0">
             <jmeno>Jméno ostatního</jmeno>
             <cesta>other/0</cesta>
+            <slidesPointingHere></slidesPointingHere>
         </item>
     </other>
 
