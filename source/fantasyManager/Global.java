@@ -23,6 +23,15 @@ public class Global {
     public static SlideHandler slide;
     public static ArrayList<String> lastVisitedSlides = new ArrayList<>();
     public static ArrayList<BasicSlideInfo> slidesList = new ArrayList<>();
+    public static int getSlidePositionInSlidesListByPath(String path) {
+        int pos = -1;
+        for (int i = 0; i < slidesList.size(); i++) {
+            if (slidesList.get(i).path.equals(path)) {
+                pos = i;
+            }
+        }
+        return pos;
+    }
 
     public static boolean isOpeningButtonRight;
     public static int openingButtonId;

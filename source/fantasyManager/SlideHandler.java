@@ -333,4 +333,11 @@ public class SlideHandler {
         return buttonElement;
     }
 
+    public int getId() {
+        int pos = path.lastIndexOf("/");
+        String idString = path.substring(pos + 1);
+        int id = Integer.parseInt(idString);
+        return id;
+    }
+
 }

@@ -1,5 +1,6 @@
 package fantasyManager;
 
+import com.sun.jna.platform.win32.GL;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.w3c.dom.Document;
@@ -22,6 +23,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -143,10 +145,61 @@ public class FileManager {
             XPathFactory xpathFactory = XPathFactory.newInstance();
             XPath xPath = xpathFactory.newXPath();
             XPathExpression expr;
-            // edit characters
+
+
+
+            // edit BasicSlideInfos \\
+            if (!slidePath.equals("/")) {
+                // edit current slide BasicSlideInfo
+                int slidePos = Global.getSlidePositionInSlidesListByPath(slidePath);
+                BasicSlideInfo basicSlideInfo = Global.slidesList.get(slidePos);
+                basicSlideInfo.name = Global.slide.name;
+//                basicSlideInfo.path = Global.slide.path;
+//                basicSlideInfo.id = Global.slide.getId();
+//                basicSlideInfo.slidesPointingHere =
+                Global.slidesList.get(slidePos) = basicSlideInfo;
+            }
+
+            // get BasicSlideInfos
+            ArrayList<BasicSlideInfo> basicCharactersInfo = new ArrayList<>();
+            ArrayList<BasicSlideInfo> basicOrganisationsInfo = new ArrayList<>();
+            ArrayList<BasicSlideInfo> basicPlacesInfo = new ArrayList<>();
+            ArrayList<BasicSlideInfo> basicOtherInfo = new ArrayList<>();
+            for (BasicSlideInfo slide : Global.slidesList) {
+                switch(slide.type) {
+                    case "characters":
+                        basicCharactersInfo.add(slide);
+                        break;
+                    case "places":
+                        basicOrganisationsInfo.add(slide);
+                        break
+                    case "organisations":
+                        basicPlacesInfo.add(slide);
+                        break;
+                    default:   // other
+                        basicOtherInfo.add(slide);
+                }
+            }
+            // get nodes from original doc
             expr = xPath.compile("/project/characters[1]");
             Node charactersInfoNode = (Node) expr.evaluate(infoDoc, XPathConstants.NODE);
-            //dodělat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!dodělat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            expr = xPath.compile("/project/organisations[1]");
+            Node OrganisationsInfoNode = (Node) expr.evaluate(infoDoc, XPathConstants.NODE);
+            expr = xPath.compile("/project/places[1]");
+            Node PlacesInfoNode = (Node) expr.evaluate(infoDoc, XPathConstants.NODE);
+            expr = xPath.compile("/project/other[1]");
+            Node OtherInfoNode = (Node) expr.evaluate(infoDoc, XPathConstants.NODE);
+            // remove old info from nodes
+            removeAllChildrenOfNode(charactersInfoNode);
+            removeAllChildrenOfNode(OrganisationsInfoNode);
+            removeAllChildrenOfNode(PlacesInfoNode);
+            removeAllChildrenOfNode(OtherInfoNode);
+            // add new info to nodes
+            addBasicSlideInfoToNode(charactersInfoNode, basicCharactersInfo, infoDoc);
+            addBasicSlideInfoToNode(OrganisationsInfoNode, basicOrganisationsInfo, infoDoc);
+            addBasicSlideInfoToNode(PlacesInfoNode, basicPlacesInfo, infoDoc);
+            addBasicSlideInfoToNode(OtherInfoNode, basicOtherInfo, infoDoc);
+
             // close stream //
             infoInput.close();
             System.out.println("new info.xml fil content: ");
@@ -166,8 +219,19 @@ public class FileManager {
             return true;
         } catch (Exception ex) {
             System.out.println("Saving error: " + ex.toString());
-            Global.showError("Svaing error", "Nelze uložit projekt, chyba: \n" + ex.toString());
+            Global.showError("Chyba ukládání", "Nelze uložit projekt, chyba: \n" + ex.toString());
             return false;
+        }
+    }
+    private static void removeAllChildrenOfNode(Node node) {
+        int charactersOldLength = node.getChildNodes().getLength();
+        for (int i = 0; i < charactersOldLength; i++) {
+            node.removeChild(node.getFirstChild());
+        }
+    }
+    private static void addBasicSlideInfoToNode(Node node, ArrayList<BasicSlideInfo> basicSlideInfos, Document doc){
+        for (BasicSlideInfo info : basicSlideInfos) {
+            node.appendChild(info.getAsElement(doc));
         }
     }
     public static boolean saveAs(File file) {
@@ -243,7 +307,7 @@ public class FileManager {
                 transformer.transform(source, result);
                 infoFileStream.close();
                 System.out.println("Image sequence in info.xml was updated");
-                Global.slidesList.add(new BasicSlideInfo(name, slidePath, slideType));
+                Global.slidesList.add(new BasicSlideInfo(name, slidePath, slideType, newSlideId));
             }
             return slidePath;
         } catch (Exception ex) {
