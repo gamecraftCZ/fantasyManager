@@ -1,6 +1,5 @@
 package fantasyManager;
 
-import com.sun.jna.platform.win32.GL;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.w3c.dom.Document;
@@ -8,6 +7,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.imageio.ImageIO;
+import javax.print.Doc;
+import javax.tools.FileObject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -24,6 +25,7 @@ import java.io.*;
 import java.net.URI;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -96,19 +98,69 @@ public class FileManager {
             System.out.println("Cant close stream! error: " +ex.toString());
         }
 
+        Global.slidesList.clear();
         return Return;
 
     }
+
     public static boolean openProjectFile(File file) {
         //open project file from zipFile(handler)
         System.out.println("Opening project file: " + file);
+        Global.slidesList.clear();
+        fileObject = file;
         loadSlidesBasicInfo();
         return true;
     }
     private static boolean loadSlidesBasicInfo() {
         System.out.println("Loading slides basic info");
-        return true;
+        try {
+            // get info.xml as doc
+            Document doc = getXmlFileFromZipAsDocument("info.xml");
+            // create xPath factory
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xPath = xpathFactory.newXPath();
+            XPathExpression expr;
+            Node sequence;
+            // add characters
+            expr = xPath.compile("/project/characters[1]");
+            sequence = (Node) expr.evaluate(doc, XPathConstants.NODE);
+            addBasicSlideInfoListFromListNode(sequence);
+            // add organisations
+            expr = xPath.compile("/project/organisations[1]");
+            sequence = (Node) expr.evaluate(doc, XPathConstants.NODE);
+            addBasicSlideInfoListFromListNode(sequence);
+            // add places
+            expr = xPath.compile("/project/places[1]");
+            sequence = (Node) expr.evaluate(doc, XPathConstants.NODE);
+            addBasicSlideInfoListFromListNode(sequence);
+            // add other
+            expr = xPath.compile("/project/other[1]");
+            sequence = (Node) expr.evaluate(doc, XPathConstants.NODE);
+            addBasicSlideInfoListFromListNode(sequence);
+            return true;
+        } catch (Exception e) {
+            System.out.println("Can't load basic slides info, error: " + e.toString());
+            return false;
+        }
     }
+    private static void addBasicSlideInfoListFromListNode(Node node) {
+        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+             addBasicSlideInfoFromNode(node.getChildNodes().item(i));
+        }
+    }
+    private static void addBasicSlideInfoFromNode(Node node) {
+        BasicSlideInfo info = new BasicSlideInfo();
+        info.name = node.getChildNodes().item(0).getTextContent();
+        String idString = node.getAttributes().getNamedItem("id").getNodeValue();
+        info.id = Integer.parseInt(idString);
+        info.path = node.getChildNodes().item(1).getTextContent();
+        info.type = node.getParentNode().getNodeName();
+        info.slidesPointingHere.addAll(Arrays.asList(node.getChildNodes().item(2).getTextContent()
+                .split(" ")));
+
+        Global.slidesList.add(info);
+    }
+
     public static boolean save() {
         System.out.println("Saving project...");
         String slidePath = Global.slide.path;
@@ -140,24 +192,23 @@ public class FileManager {
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document infoDoc = builder.parse(infoInput);
-            System.out.println("modifying info.xml doc");
+            // close stream //
+            infoInput.close();
             // edit document //
+            System.out.println("modifying info.xml doc");
             XPathFactory xpathFactory = XPathFactory.newInstance();
             XPath xPath = xpathFactory.newXPath();
             XPathExpression expr;
 
 
 
-            // edit BasicSlideInfos \\
-            if (!slidePath.equals("/")) {
+            // edit current BasicSlideInfo \\
+            System.out.println("Modifying current slide BasicSlideInfo");
+            if (!(slidePath.equals("") || slidePath.equals("/")
+                    || slidePath.equals("index.xml") || slidePath.equals("/index.xml"))) {
                 // edit current slide BasicSlideInfo
                 int slidePos = Global.getSlidePositionInSlidesListByPath(slidePath);
-                BasicSlideInfo basicSlideInfo = Global.slidesList.get(slidePos);
-                basicSlideInfo.name = Global.slide.name;
-//                basicSlideInfo.path = Global.slide.path;
-//                basicSlideInfo.id = Global.slide.getId();
-//                basicSlideInfo.slidesPointingHere =
-                Global.slidesList.get(slidePos) = basicSlideInfo;
+                Global.slidesList.get(slidePos).name = Global.slide.name;
             }
 
             // get BasicSlideInfos
@@ -165,6 +216,8 @@ public class FileManager {
             ArrayList<BasicSlideInfo> basicOrganisationsInfo = new ArrayList<>();
             ArrayList<BasicSlideInfo> basicPlacesInfo = new ArrayList<>();
             ArrayList<BasicSlideInfo> basicOtherInfo = new ArrayList<>();
+            // for each basicSlideInfo
+            System.out.println("Getting all basic slides info from list");
             for (BasicSlideInfo slide : Global.slidesList) {
                 switch(slide.type) {
                     case "characters":
@@ -172,7 +225,7 @@ public class FileManager {
                         break;
                     case "places":
                         basicOrganisationsInfo.add(slide);
-                        break
+                        break;
                     case "organisations":
                         basicPlacesInfo.add(slide);
                         break;
@@ -181,6 +234,7 @@ public class FileManager {
                 }
             }
             // get nodes from original doc
+            System.out.println("Getting nodes from info.xml doc");
             expr = xPath.compile("/project/characters[1]");
             Node charactersInfoNode = (Node) expr.evaluate(infoDoc, XPathConstants.NODE);
             expr = xPath.compile("/project/organisations[1]");
@@ -190,27 +244,27 @@ public class FileManager {
             expr = xPath.compile("/project/other[1]");
             Node OtherInfoNode = (Node) expr.evaluate(infoDoc, XPathConstants.NODE);
             // remove old info from nodes
+            System.out.println("Removing old info from nodes");
             removeAllChildrenOfNode(charactersInfoNode);
             removeAllChildrenOfNode(OrganisationsInfoNode);
             removeAllChildrenOfNode(PlacesInfoNode);
             removeAllChildrenOfNode(OtherInfoNode);
             // add new info to nodes
+            System.out.println("Adding new info to nodes");
             addBasicSlideInfoToNode(charactersInfoNode, basicCharactersInfo, infoDoc);
             addBasicSlideInfoToNode(OrganisationsInfoNode, basicOrganisationsInfo, infoDoc);
             addBasicSlideInfoToNode(PlacesInfoNode, basicPlacesInfo, infoDoc);
             addBasicSlideInfoToNode(OtherInfoNode, basicOtherInfo, infoDoc);
 
-            // close stream //
-            infoInput.close();
             System.out.println("new info.xml fil content: ");
             printXML(infoDoc);
 
             // save modified slides info // //
             System.out.println("Saving info.xml");
+            Files.delete(fs.getPath("info.xml"));
             OutputStream infoOutput = Files.newOutputStream(fs.getPath("info.xml"));
-            Transformer infoTransformer = TransformerFactory.newInstance().newTransformer();
-            DOMSource infoSource = new DOMSource(slideDoc);
-            StreamResult infoResult = new StreamResult(slideOutputStream);
+            DOMSource infoSource = new DOMSource(infoDoc);
+            StreamResult infoResult = new StreamResult(infoOutput);
             transformer.transform(infoSource, infoResult);
             infoOutput.close();
 
@@ -234,9 +288,36 @@ public class FileManager {
             node.appendChild(info.getAsElement(doc));
         }
     }
+
     public static boolean saveAs(File file) {
-        System.out.println("Saving project...");
-        return true;
+        System.out.println("Saving project as: " + file.toString());
+        // copy current project file to new location
+        try {
+            copyFile(fileObject, file);
+        } catch (Exception e) {
+            System.out.println("Cant save as, error: " + e.toString());
+            Global.showError("Nelze uložit soubor jako...", "Soubor nelze uložit na nové umístění," +
+                    " budu stále pracovat v momentálním souboru");
+        }
+        fileObject = file;
+        // save project
+        return save();
+    }
+    public static void copyFile(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
     }
 
     public static String addSlide(String slideType, String name, String upSlide) {
@@ -366,7 +447,8 @@ public class FileManager {
             // get image sequence
             System.out.println("Getting name");
             XPathExpression expr = xPath.compile("/project/images[1]");
-            Node imageSequence = ((Node) expr.evaluate(doc, XPathConstants.NODE)).getAttributes().getNamedItem("sequence");
+            Node imageSequence = ((Node) expr.evaluate(doc, XPathConstants.NODE)).getAttributes()
+                    .getNamedItem("sequence");
             expr = xPath.compile("/project/images[1]/@sequence");
             newImageId = Integer.parseInt((String) expr.evaluate(doc, XPathConstants.STRING));
             System.out.println("New image id: " +newImageId);
@@ -412,6 +494,7 @@ public class FileManager {
         }
 
     }
+
     public static Image getImage(int imageId) {
         System.out.println("Getting image file " +imageId);
         InputStream stream = null;
@@ -458,6 +541,7 @@ public class FileManager {
                 }
                 System.out.println("Image deleted form zip file");
             }
+            saved = false;
             return true;
         } catch(Exception ex) {
             System.out.println("Cant delete image form zip, error: " + ex.toString());
@@ -471,6 +555,23 @@ public class FileManager {
         System.out.println("Loading zip file");
         ZipFile zipFile = new ZipFile(fileObject);
         return zipFile;
+    }
+    public static Document getXmlFileFromZipAsDocument(String path) {
+        try {
+            // get input stream
+            ZipFile zip = getZipFile();
+            ZipEntry entry = new ZipEntry(path);
+            InputStream inputStream = zip.getInputStream(entry);
+            // get document
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(inputStream);
+            zip.close();
+            return doc;
+        } catch (Exception e) {
+            System.out.println("Error when getting xml file fro zip as document: " + e.toString());
+        }
+        return null;
     }
 
 

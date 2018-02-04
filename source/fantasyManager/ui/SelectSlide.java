@@ -112,7 +112,7 @@ public class SelectSlide {
         ObservableList<BasicSlideInfo> searchMatches = FXCollections.observableArrayList();
         try {
             for (BasicSlideInfo slide : Global.slidesList) {
-                if (slide.name.contains(searchText)) {
+                if (slide.name.contains(searchText)) { // && !slide.path.equals(Global.slide.path)
                     System.out.println("Slide match search criteria: \"" + slide.name + "\"");
                     BasicSlideInfo searchedSlide =
                             new BasicSlideInfo(slide.name, slide.path, getNameOfType(slide.type), slide.id);

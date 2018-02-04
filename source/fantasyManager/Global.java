@@ -21,6 +21,14 @@ import java.util.ArrayList;
 public class Global {
 
     public static SlideHandler slide;
+    public static UserButton getButtonById(ArrayList<UserButton> buttons, int buttonId) {
+        for (UserButton button : buttons) {
+            if (button.buttonId == buttonId) {
+                return button;
+            }
+        }
+        return new UserButton(buttons.get(buttons.size()).buttonId + 1);
+    }
     public static ArrayList<String> lastVisitedSlides = new ArrayList<>();
     public static ArrayList<BasicSlideInfo> slidesList = new ArrayList<>();
     public static int getSlidePositionInSlidesListByPath(String path) {

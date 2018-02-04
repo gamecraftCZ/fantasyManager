@@ -83,9 +83,11 @@ public class EditorController {
 
     public void nameChanged() {
         String nameString = name.getText();
-        Global.slide.name = nameString;
-        FileManager.saved = false;
-        System.out.println("Name changed to: " + nameString);
+        if (!Global.slide.name.equals(nameString)) {
+            Global.slide.name = nameString;
+            FileManager.saved = false;
+            System.out.println("Name changed to: " + nameString);
+        }
     }
 
     public void imageLeftButton() {

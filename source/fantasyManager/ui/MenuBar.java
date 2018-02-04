@@ -111,12 +111,13 @@ public class MenuBar {
         System.out.println("save file as in file choose dialog");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Uložit projekt jako");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Project Files", "*.fmp"));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Project Files", "*.fmp"));
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             System.out.println("creating file: " + file);
+            // save as
             if (FileManager.saveAs(file)) {
-                // save as
                 System.out.println("Project saved as");
             } else {
                 System.out.println("Cant save as: " + file);
@@ -147,7 +148,7 @@ public class MenuBar {
             if (FileManager.openProjectFile(file)) {
                 // load project
                 System.out.println("File opened");
-                Global.slide = new fantasyManager.SlideHandler("");
+                Global.slide = new SlideHandler("");
                 System.out.println("New slide handler created");
                 openNewScene("editing.fxml");
                 System.out.println("Scene loaded");

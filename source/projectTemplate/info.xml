@@ -3,36 +3,36 @@
 <project version="1">
     <images sequence="3"></images>
 
-    <characters sequence="1">
-        <item id="0">
-            <jmeno>Jméno postavy</jmeno>
-            <cesta>characters/0</cesta>
-            <slidesPointingHere></slidesPointingHere>
-        </item>
+    <characters sequence="0">
+        <!--<item id="0">-->
+            <!--<name>Jméno postavy</name>-->
+            <!--<path>characters/0</path>-->
+            <!--<slidesPointingHere></slidesPointingHere>-->
+        <!--</item>-->
     </characters>
 
-    <organisations sequence="1">
-        <item id="0">
-            <jmeno>Jméno organizace</jmeno>
-            <cesta>organisations/0</cesta>
-            <slidesPointingHere></slidesPointingHere>
-        </item>
+    <organisations sequence="0">
+        <!--<item id="0">-->
+            <!--<name>Jméno organizace</name>-->
+            <!--<path>organisations/0</path>-->
+            <!--<slidesPointingHere></slidesPointingHere>-->
+        <!--</item>-->
     </organisations>
 
-    <places sequence="1">
-        <item id="0">
-            <jmeno>Jméno místa</jmeno>
-            <cesta>places/0</cesta>
-            <slidesPointingHere></slidesPointingHere>
-        </item>
+    <places sequence="0">
+        <!--<item id="0">-->
+            <!--<name>Jméno místa</name>-->
+            <!--<path>places/0</path>-->
+            <!--<slidesPointingHere></slidesPointingHere>-->
+        <!--</item>-->
     </places>
 
-    <other sequence="1">
-        <item id="0">
-            <jmeno>Jméno ostatního</jmeno>
-            <cesta>other/0</cesta>
-            <slidesPointingHere></slidesPointingHere>
-        </item>
+    <other sequence="0">
+        <!--<item id="0">-->
+            <!--<name>Jméno ostatního</name>-->
+            <!--<path>other/0</path>-->
+            <!--<slidesPointingHere></slidesPointingHere>-->
+        <!--</item>-->
     </other>
 
 </project>

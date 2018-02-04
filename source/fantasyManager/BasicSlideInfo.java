@@ -40,25 +40,21 @@ public class BasicSlideInfo {
         // set id
         slideInfoElement.setAttribute("id", ""+id);
         // set name
-        Element nameElement = doc.createElement("jmeno");
+        Element nameElement = doc.createElement("name");
         nameElement.insertBefore(doc.createTextNode(name), nameElement.getLastChild());
         slideInfoElement.appendChild(nameElement);
         // set path
-        Element pathElement = doc.createElement("jmeno");
+        Element pathElement = doc.createElement("path");
         pathElement.insertBefore(doc.createTextNode(path), pathElement.getLastChild());
         slideInfoElement.appendChild(pathElement);
-        // set type
-        Element typeElement = doc.createElement("jmeno");
-        typeElement.insertBefore(doc.createTextNode(type), typeElement.getLastChild());
-        slideInfoElement.appendChild(typeElement);
+//        // set type
+//        Element typeElement = doc.createElement("type");
+//        typeElement.insertBefore(doc.createTextNode(type), typeElement.getLastChild());
+//        slideInfoElement.appendChild(typeElement);
         // set slidesPointingHere
-        Element slidesPointingHereElement = doc.createElement("jmeno");
+        Element slidesPointingHereElement = doc.createElement("slidesPointingHere");
 
-        String slidesPointingHereAsText = "";
-        for (String slidePathPointingHere : slidesPointingHere) {
-            slidesPointingHereAsText = slidesPointingHereAsText + slidePathPointingHere + " ";
-        }
-        slidesPointingHereAsText = slidesPointingHereAsText.substring(slidesPointingHereAsText.length() - 2);
+        String slidesPointingHereAsText = String.join(" ", slidesPointingHere);
 
         slidesPointingHereElement.insertBefore(doc.createTextNode(slidesPointingHereAsText), slidesPointingHereElement.getLastChild());
         slideInfoElement.appendChild(slidesPointingHereElement);
