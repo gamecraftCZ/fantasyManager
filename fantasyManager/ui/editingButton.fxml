@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="PaneRoot0" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.EditingButton">
+   <children>
+      <TextField fx:id="buttonTitle" layoutX="14.0" layoutY="14.0" onKeyReleased="#titleChanged" prefHeight="60.0" prefWidth="476.0" promptText="Název tlačítka">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="buttonSubTitle" layoutX="55.0" layoutY="83.0" onKeyReleased="#subTitleChanged" prefHeight="27.0" prefWidth="726.0" promptText="Podnázev" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="505.0" layoutY="31.0" prefHeight="27.0" prefWidth="128.0" text="Typ tlačítka: " textAlignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+       <ChoiceBox fx:id="typeOfButton" layoutX="633.0" layoutY="32.0" prefHeight="25.0" prefWidth="85.0" value="odkaz">
+           <items>
+           <FXCollections fx:factory="observableArrayList">
+               <String fx:value="text" />
+               <String fx:value="odkaz" />
+               <String fx:value="rozcestník" />
+           </FXCollections>
+           </items>
+       </ChoiceBox>
+      <Pane fx:id="text" layoutX="14.0" layoutY="122.0" prefHeight="414.0" prefWidth="773.0" visible="false">
+         <children>
+            <TextArea fx:id="buttonTextArea" onKeyReleased="#textAreaChanged" prefHeight="414.0" prefWidth="773.0" promptText="text">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextArea>
+         </children></Pane>
+      <Pane fx:id="buttons" layoutX="14.0" layoutY="122.0" prefHeight="414.0" prefWidth="773.0" visible="false" />
+      <Pane fx:id="link" layoutX="14.0" layoutY="122.0" prefHeight="414.0" prefWidth="773.0">
+        <Button layoutX="257.0" layoutY="170.0" mnemonicParsing="false" onMouseClicked="#getLink" prefHeight="75.0" prefWidth="75.0" text="...">
+           <font>
+               <Font size="35.0" />
+           </font>
+        </Button>
+        <Label fx:id="linkName" layoutX="367.0" layoutY="198.0" text="Hlavní rozcestník">
+           <font>
+               <Font size="20.0" />
+           </font>
+        </Label>
+      </Pane>
+       <Pane fx:id="selectSlidePathRoot" layoutX="150.0" layoutY="8.0" prefHeight="584.0" prefWidth="600.0" visible="false" />
+   </children>
+</Pane>
