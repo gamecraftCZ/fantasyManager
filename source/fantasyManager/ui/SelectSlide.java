@@ -1,33 +1,28 @@
+/*
+ * 2018 Patrik Vácal.
+ * This file is under CC BY-SA 4.0 license.
+ * This project on github: https://github.com/gamecraftCZ/fantasyManager
+ * Please do not remove this comment!
+ */
+
 package fantasyManager.ui;
 
 import fantasyManager.BasicSlideInfo;
 import fantasyManager.Global;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import javafx.util.Callback;
-
-import java.awt.*;
 
 public class SelectSlide {
 
     private Pane selectPane;
+    private boolean searchAlsoForCurrentSlide;
 
     @FXML private Label promptText;
     @FXML private TextField searchField;
@@ -38,8 +33,9 @@ public class SelectSlide {
 
     @FXML public void initialize() {
         System.out.println("Initializing slide select");
-        selectPane = Global.selectSlidePane;
-        promptText.setText(Global.selectSlidePrompt);
+        selectPane = Global.selectSlide_Pane;
+        searchAlsoForCurrentSlide = Global.selectSlide_SearchAlsoForCurrentSlide;
+        promptText.setText(Global.selectSlide_Prompt);
 
         // Listen for Search field changes \\
         searchField.textProperty().addListener(new ChangeListener<String>() {
@@ -53,12 +49,11 @@ public class SelectSlide {
         // initialize table view \\
         searchResultsColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
         searchResultsColumnValue.setCellValueFactory(new PropertyValueFactory<>("type"));
-
         Callback<TableColumn<BasicSlideInfo, String>, TableCell<BasicSlideInfo, String>> buttonCellFactory
                 = new Callback<TableColumn<BasicSlideInfo, String>, TableCell<BasicSlideInfo, String>>() {
                     @Override
                     public TableCell call(final TableColumn<BasicSlideInfo, String> param) {
-                        final TableCell<BasicSlideInfo, String> cell = new TableCell<BasicSlideInfo, String>() {
+                        return new TableCell<BasicSlideInfo, String>() {
 
                             final Button btn = new Button("->");
 
@@ -79,7 +74,6 @@ public class SelectSlide {
                                 }
                             }
                         };
-                        return cell;
                     }
                 };
         searchResultsColumnSelect.setCellFactory(buttonCellFactory);
@@ -101,7 +95,7 @@ public class SelectSlide {
     }
     private void select(String slidePath) {
         System.out.println("Selecting slide: " + slidePath);
-        Global.selectSlideSelected = slidePath;
+        Global.selectSlide_Selected = slidePath;
         selectPane.setVisible(false);
     }
 
@@ -113,6 +107,13 @@ public class SelectSlide {
         try {
             for (BasicSlideInfo slide : Global.slidesList) {
                 if (slide.name.contains(searchText)) { // && !slide.path.equals(Global.slide.path)
+                    // if we don't want search for currently opened slide and this slide is that slide
+                    if (!searchAlsoForCurrentSlide) {
+                        if (slide.path.equals(Global.slide.path)) {
+                            continue;
+                        }
+                    }
+                    // slide match criteria
                     System.out.println("Slide match search criteria: \"" + slide.name + "\"");
                     BasicSlideInfo searchedSlide =
                             new BasicSlideInfo(slide.name, slide.path, getNameOfType(slide.type), slide.id);

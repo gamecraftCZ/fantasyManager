@@ -1,38 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project version="1">
-    <images sequence="3"></images>
+    <images sequence="3"/>
 
-    <characters sequence="0">
-        <!--<item id="0">-->
-            <!--<name>Jméno postavy</name>-->
-            <!--<path>characters/0</path>-->
-            <!--<slidesPointingHere></slidesPointingHere>-->
-        <!--</item>-->
-    </characters>
+    <characters sequence="0"/>
 
-    <organisations sequence="0">
-        <!--<item id="0">-->
-            <!--<name>Jméno organizace</name>-->
-            <!--<path>organisations/0</path>-->
-            <!--<slidesPointingHere></slidesPointingHere>-->
-        <!--</item>-->
-    </organisations>
+    <organisations sequence="0"/>
 
-    <places sequence="0">
-        <!--<item id="0">-->
-            <!--<name>Jméno místa</name>-->
-            <!--<path>places/0</path>-->
-            <!--<slidesPointingHere></slidesPointingHere>-->
-        <!--</item>-->
-    </places>
+    <places sequence="0"/>
 
-    <other sequence="0">
-        <!--<item id="0">-->
-            <!--<name>Jméno ostatního</name>-->
-            <!--<path>other/0</path>-->
-            <!--<slidesPointingHere></slidesPointingHere>-->
-        <!--</item>-->
-    </other>
+    <other sequence="0"/>
 
 </project>

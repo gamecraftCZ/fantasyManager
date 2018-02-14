@@ -1,3 +1,10 @@
+/*
+ * 2018 Patrik Vácal.
+ * This file is under CC BY-SA 4.0 license.
+ * This project on github: https://github.com/gamecraftCZ/fantasyManager
+ * Please do not remove this comment!
+ */
+
 package fantasyManager;
 
 import org.w3c.dom.Document;
@@ -10,18 +17,14 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 public class SlideHandler {
 
     public String name; // name of character/place/organisation
     public String upSlide; // slide where to go on click on up button
     public String path; // path to location of this character/place/organisation
-    public ArrayList<Info> infos = new ArrayList<>();
+    public String info;
     public ArrayList<String> linksPointingHere = new ArrayList<>();
     public ArrayList<Integer> images = new ArrayList<>(); // list of images id's in this slide
     public ArrayList<UserButton> leftButtons = new ArrayList<>(); // list of buttons on left side
@@ -38,47 +41,41 @@ public class SlideHandler {
         // load slide from file
         System.out.println("Creating slide handler, path: " + slidePath);
         path = slidePath;
-        InputStream stream;
-        ZipFile zipFile;
-        try {
+        Document doc;
+        if (slidePath.length() < 10) {
+            // edit file path //
             try {
                 if (slidePath.isEmpty()) {
                     path = "index.xml";
                 } else {
-                    System.out.println("Last 9 characters of path: "
-                            + (slidePath.substring(slidePath.length() - 9).equals("index.xml")));
-                    System.out.println("Last character of path: "
-                            + (slidePath.substring(slidePath.length() - 1)).equals("index.xml"));
-                    if (!(slidePath.substring(slidePath.length() - 9, slidePath.length()).equals("index.xml"))) {
+                    boolean last9CharactersAreIndexXml = slidePath.substring(slidePath.length() - 9).equals("index.xml");
+                    boolean last1CharacterIsSlash = slidePath.substring(slidePath.length() - 1).equals("/");
+                    System.out.println("Last 9 characters of path are \"index.xml\": " + last9CharactersAreIndexXml);
+                    System.out.println("Last character of path is \"/\": " + last1CharacterIsSlash);
+                    if (last9CharactersAreIndexXml) {
                         path = slidePath;
-                    } else if (!(slidePath.substring(slidePath.length() - 1).equals("/"))) {
+                    } else if (!last1CharacterIsSlash) {
                         path = slidePath + "/index.xml";
                     } else {
                         path = slidePath + "index.xml";
                     }
                 }
-            } catch (Exception ex) {
+            } catch(Exception ex){
                 if (!(slidePath.substring(slidePath.length() - 1).equals("/"))) {
                     path = slidePath + "/index.xml";
                 } else {
                     path = slidePath + "index.xml";
                 }
             }
-            System.out.println("Edited path: " + slidePath);
-            zipFile = FileManager.getZipFile();
-            ZipEntry entry = new ZipEntry(path);
-            stream = zipFile.getInputStream(entry);
-        } catch (IOException ex) {
-            System.out.println("Cant open file " +slidePath+ " from project file " + FileManager.getFileObject());
-            Global.showError("Project file error", "Cant open slide "
-                    + slidePath + " from project "
-                    + FileManager.getFileObject()
-                    + "\n File cant be loaded");
-            loadedCorrectly = false;
-            return;
+        } else {
+            path = slidePath;
         }
+        System.out.println("Edited path: " + path);
+        // load data
         try {
-            loadData(stream);
+            doc = FileManager.getXmlFileFromZipAsDocument(path);
+            loadData(doc);
+            loadedCorrectly = true;
         } catch (Exception ex) {
             System.out.println("Cant load slide correctly " +slidePath
                     + " from project file "
@@ -90,24 +87,11 @@ public class SlideHandler {
                     + "\n Slide file is broken, error: \n"
                     + ex.toString());
             loadedCorrectly = false;
-            return;
-        }
-        loadedCorrectly = true;
-        try {
-            stream.close();
-            zipFile.close();
-        } catch(Exception ex) {
-            System.out.println("Cant close stream! error: " +ex.toString());
         }
     }
-    private void loadData(InputStream inputStream) throws Exception {
+    private void loadData(Document doc) throws Exception {
         System.out.println("Reading slide file");
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(inputStream);
-        System.out.println("XML doc created");
         XPathFactory xpathFactory = XPathFactory.newInstance();
         XPath xPath = xpathFactory.newXPath();
 
@@ -115,28 +99,30 @@ public class SlideHandler {
         System.out.println("Getting name");
         XPathExpression expr = xPath.compile("/slide/name[1]/text()");
         this.name = (String) expr.evaluate(doc, XPathConstants.STRING);
-        System.out.println("Name: " +name);
+        System.out.println("Name: " + name);
 
         // get up slide //
-        System.out.println("Getting name");
-        expr = xPath.compile("/slide/upSLide[1]/text()");
+        System.out.println("Getting up slide");
+        expr = xPath.compile("/slide/upSlide[1]/text()");
         this.upSlide = (String) expr.evaluate(doc, XPathConstants.STRING);
-        System.out.println("Name: " +name);
+        System.out.println("Up slide: " + name);
 
         // get info //
         System.out.println("Getting info");
-        expr = xPath.compile("/slide/info[1]/item");
-        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-        // for each info
-        for (int i = 1; i < nodeList.getLength()+1; i++) {
-            expr = xPath.compile("/slide/info/item[" +i+ "]/name/text()");
-            String infoName = (String) expr.evaluate(doc, XPathConstants.STRING);
-            expr = xPath.compile("/slide/info/item[" +i+ "]/value/text()");
-            String infoValue = (String) expr.evaluate(doc, XPathConstants.STRING);
-            Info infoObj = new Info(infoName, infoValue);
-            this.infos.add(infoObj);
-            System.out.println("Info name: " +infoName+ " , value: " +infoValue);
-        }
+        expr = xPath.compile("/slide/info[1]/text()");
+        this.info = (String) expr.evaluate(doc, XPathConstants.STRING);
+        System.out.println("Info: " + info);
+//        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+//        // for each info
+//        for (int i = 1; i < nodeList.getLength()+1; i++) {
+//            expr = xPath.compile("/slide/info/item[" +i+ "]/name/text()");
+//            String infoName = (String) expr.evaluate(doc, XPathConstants.STRING);
+//            expr = xPath.compile("/slide/info/item[" +i+ "]/value/text()");
+//            String infoValue = (String) expr.evaluate(doc, XPathConstants.STRING);
+//            Info infoObj = new Info(infoName, infoValue);
+//            this.infos.add(infoObj);
+//            System.out.println("Info name: " +infoName+ " , value: " +infoValue);
+//        }
 
         // get images //
         System.out.println("Getting images");
@@ -162,13 +148,15 @@ public class SlideHandler {
 
         // get left buttons //
         System.out.println("Getting left buttons");
+        NodeList nodeList;
         try {
             expr = xPath.compile("/slide/leftButtons[1]/button");
             nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             // for each button
-            for (int i = 0; i < nodeList.getLength() + 1; i++) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
                 System.out.println("Getting info for left button " + i);
-                leftButtons.add(getButtonInfo(xPath, doc, "/slide/leftButtons/button[" + i + "]", i));
+                leftButtons.add(getButtonInfo(xPath, doc,
+                        "/slide/leftButtons[1]/button[" +(i+1)+ "]", i));
             }
         } catch (Exception ex) {
             System.out.println("Probably no left buttons, error: " +ex.toString());
@@ -180,9 +168,10 @@ public class SlideHandler {
             expr = xPath.compile("/slide/rightButtons[1]/button");
             nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             // for each button
-            for (int i = 0; i < nodeList.getLength()+1; i++) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
                 System.out.println("Getting info for right button " +i);
-                rightButtons.add(getButtonInfo(xPath, doc, "/slide/rightButtons/button[" +i+ "]", i));
+                rightButtons.add(getButtonInfo(xPath, doc,
+                        "/slide/rightButtons[1]/button[" +(i+1)+ "]", i));
             }
         } catch (Exception ex) {
             System.out.println("Probably no right buttons, error: " +ex.toString());
@@ -243,6 +232,7 @@ public class SlideHandler {
             // prepare elements //
             if (name == null) { name = ""; }
             if (upSlide == null) { upSlide = ""; }
+            if (info == null) { info = ""; }
 
             // create document //
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -262,25 +252,26 @@ public class SlideHandler {
             slide.appendChild(upSlideElement);  // add tag to slide
             // info //
             Element infoElement = doc.createElement("info");  // create tag
+            infoElement.insertBefore(doc.createTextNode(info), infoElement.getLastChild());  // add text
             slide.appendChild(infoElement);  // add tag to slide
-            // add data to info
-            Element[] infoData = new Element[infos.size()];
-            Element[] infoName = new Element[infos.size()];
-            Element[] infoValue = new Element[infos.size()];
-            // for each info add its name and value
-            for (int i = 0; i<infos.size();i++) {
-                // create info Element
-                infoData[i] = doc.createElement("item");
-                infoElement.appendChild(infoData[i]);
-                // set name
-                infoName[i] = doc.createElement("name");
-                infoName[i].insertBefore(doc.createTextNode(infos.get(i).name), infoName[i].getLastChild());
-                infoData[i].appendChild(infoName[i]);
-                // set value
-                infoValue[i] = doc.createElement("value");
-                infoValue[i].insertBefore(doc.createTextNode(infos.get(i).name), infoValue[i].getLastChild());
-                infoData[i].appendChild(infoValue[i]);
-            }
+//            // add data to info
+//            Element[] infoData = new Element[infos.size()];
+//            Element[] infoName = new Element[infos.size()];
+//            Element[] infoValue = new Element[infos.size()];
+//            // for each info add its name and value
+//            for (int i = 0; i<infos.size();i++) {
+//                // create info Element
+//                infoData[i] = doc.createElement("item");
+//                infoElement.appendChild(infoData[i]);
+//                // set name
+//                infoName[i] = doc.createElement("name");
+//                infoName[i].insertBefore(doc.createTextNode(infos.get(i).name), infoName[i].getLastChild());
+//                infoData[i].appendChild(infoName[i]);
+//                // set value
+//                infoValue[i] = doc.createElement("value");
+//                infoValue[i].insertBefore(doc.createTextNode(infos.get(i).name), infoValue[i].getLastChild());
+//                infoData[i].appendChild(infoValue[i]);
+//            }
             // images //
             Element imagesElement = doc.createElement("images");  // create tag
             imagesElement.insertBefore(doc.createTextNode(getImagesAsString()), imagesElement.getLastChild());  // text
@@ -312,8 +303,7 @@ public class SlideHandler {
             imagesStringBuilder.append(s);
             imagesStringBuilder.append(" ");
         }
-        String images = imagesStringBuilder.toString();
-        return images;
+        return imagesStringBuilder.toString();
     }
     private String getLinksPointingHereAsString() {
         StringBuilder imagesStringBuilder = new StringBuilder();
@@ -321,8 +311,7 @@ public class SlideHandler {
             imagesStringBuilder.append(s);
             imagesStringBuilder.append(" ");
         }
-        String images = imagesStringBuilder.toString();
-        return images;
+        return imagesStringBuilder.toString();
     }
     private Element getButtonsAsElement(ArrayList<UserButton> buttons, String elementName, Document doc) {
         Element buttonElement = doc.createElement(elementName);
@@ -336,8 +325,7 @@ public class SlideHandler {
     public int getId() {
         int pos = path.lastIndexOf("/");
         String idString = path.substring(pos + 1);
-        int id = Integer.parseInt(idString);
-        return id;
+        return Integer.parseInt(idString);
     }
 
 }

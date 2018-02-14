@@ -1,10 +1,16 @@
+/*
+ * 2018 Patrik Vácal.
+ * This file is under CC BY-SA 4.0 license.
+ * This project on github: https://github.com/gamecraftCZ/fantasyManager
+ * Please do not remove this comment!
+ */
+
 package fantasyManager;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 
@@ -30,7 +36,7 @@ public class UserButton {
         System.out.println("Creating blank user button with id: " +id);
         buttonId = id;
 
-        typeOfButton = 0;
+        typeOfButton = 1;
     }
     public UserButton(String title, String subTitle, int buttonId, int typeOfButton, String linkTarget, String text,
                       ArrayList<UserButton> leftButtons, ArrayList<UserButton> rightButtons) {

@@ -1,3 +1,10 @@
+/*
+ * 2018 Patrik Vácal.
+ * This file is under CC BY-SA 4.0 license.
+ * This project on github: https://github.com/gamecraftCZ/fantasyManager
+ * Please do not remove this comment!
+ */
+
 package fantasyManager;
 
 import javafx.application.Application;
@@ -23,7 +30,7 @@ public class Main extends Application {
             public void handle(WindowEvent event) {
                 System.out.println("Closing application");
                 if (!FileManager.save()) {
-                    Global.yesNoDialogFOrNotSaved("Cant save!", "Saving error, do you want to close without saving?");
+                    Global.yesNoDialogForNotSaved("Cant save!", "Saving error, do you want to close without saving?");
                     if (!FileManager.saved) {
                         event.consume();
                     }
@@ -38,11 +45,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         System.out.println("Starting fantasy manager...");
         System.out.println("Java version: " + System.getProperty("java.version"));
-//        try {
-//            Global.tempFolder = Files.createTempDirectory("fantasyManager-");
-//        } catch (Exception ex) {
-//            System.out.println("Error creating temp dictionary.");
-//        }
         launch(args);
         System.out.println("Fantasy manager closed");
     }

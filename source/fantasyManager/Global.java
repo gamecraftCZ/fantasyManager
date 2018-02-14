@@ -1,7 +1,16 @@
+/*
+ * 2018 Patrik Vácal.
+ * This file is under CC BY-SA 4.0 license.
+ * This project on github: https://github.com/gamecraftCZ/fantasyManager
+ * Please do not remove this comment!
+ */
+
 package fantasyManager;
 
+import fantasyManager.ui.MenuBar;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,8 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Global {
@@ -29,7 +37,66 @@ public class Global {
         }
         return new UserButton(buttons.get(buttons.size()).buttonId + 1);
     }
+    public static int getButtonPositionInListById(ArrayList<UserButton> buttons, int buttonId) {
+        for (int i = 0; i < buttons.size(); i++) {
+            if (buttons.get(i).buttonId == buttonId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static boolean editMode = true;
     public static ArrayList<String> lastVisitedSlides = new ArrayList<>();
+    public static void addToLastVisitedSlides(String path) {
+        lastVisitedSlides.add(path);
+        if (lastVisitedSlides.size() > 255) {
+            lastVisitedSlides.remove(0);
+        }
+    }
+    public static void openNewSlide(String slidePath) {
+        // save current slide path
+        String currentSlidePath = "";
+        if (slide != null) currentSlidePath = Global.slide.path;
+        // open new scene
+        if (editMode) {
+            if (slide != null) {
+                if (FileManager.save()) {
+                    slide = new fantasyManager.SlideHandler(slidePath);
+                    openNewScene("editor.fxml");
+                } else {
+                    Global.yesNoDialogForNotSaved("Nelze uložit!",
+                            "Chyba při ukládání, chcete přesto přejít na další slide?");
+                    if (FileManager.saved) {
+                        slide = new fantasyManager.SlideHandler(slidePath);
+                        openNewScene("editor.fxml");
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                slide = new fantasyManager.SlideHandler(slidePath);
+                openNewScene("editor.fxml");
+            }
+        } else {
+            slide = new fantasyManager.SlideHandler(slidePath);
+            openNewScene("view.fxml");
+        }
+        // add to last visited slides
+        if (!currentSlidePath.isEmpty()) addToLastVisitedSlides(currentSlidePath);
+    }
+    public static void openNewScene(String scenePath) {
+        System.out.println("Opening scene: " + scenePath);
+        try {
+            Pane pane = FXMLLoader.load(MenuBar.class.getResource(scenePath));
+            MenuBar.windowRoot.getChildren().removeAll(MenuBar.windowRoot.getChildren());
+            MenuBar.windowRoot.getChildren().addAll(pane);
+        } catch (IOException ex) {
+            System.out.println("No chance to get there, error: " +ex.toString());
+            // No chance to get there until all scenes that are opening are available
+        }
+    }
+
     public static ArrayList<BasicSlideInfo> slidesList = new ArrayList<>();
     public static int getSlidePositionInSlidesListByPath(String path) {
         int pos = -1;
@@ -41,15 +108,14 @@ public class Global {
         return pos;
     }
 
-    public static boolean isOpeningButtonRight;
-    public static int openingButtonId;
+    public static UserButton buttonEditor_button;
 
     public static String whatToAdd;
-    public static String addTempString;
 
-    public static String selectSlidePrompt;
-    public static Pane selectSlidePane;
-    public static String selectSlideSelected;
+    public static String selectSlide_Prompt;
+    public static Pane selectSlide_Pane;
+    public static String selectSlide_Selected;
+    public static boolean selectSlide_SearchAlsoForCurrentSlide;
 
     public static void showError(String title, String text) {
         Stage window = new Stage();
@@ -82,7 +148,7 @@ public class Global {
         window.setScene(scene);
         window.showAndWait();
     }
-    public static void yesNoDialogFOrNotSaved(String title, String text) {
+    public static void yesNoDialogForNotSaved(String title, String text) {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);

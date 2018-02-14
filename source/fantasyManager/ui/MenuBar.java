@@ -1,9 +1,14 @@
+/*
+ * 2018 Patrik Vácal.
+ * This file is under CC BY-SA 4.0 license.
+ * This project on github: https://github.com/gamecraftCZ/fantasyManager
+ * Please do not remove this comment!
+ */
+
 package fantasyManager.ui;
 
-import fantasyManager.BasicSlideInfo;
 import fantasyManager.FileManager;
 import fantasyManager.Global;
-import fantasyManager.SlideHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -21,7 +26,7 @@ public class MenuBar {
     public static Pane windowRoot;
     public static Pane popOutMenuRoot;
 
-    private boolean selectedEditMode = true;
+    public static boolean selectedEditMode = true;
     private boolean selectFileWindowOpened = false;
     @FXML private Pane root;
     @FXML private MenuItem addCharacter;
@@ -33,16 +38,6 @@ public class MenuBar {
     private String openedInPopOutMenu;
 
     @FXML public void initialize() {
-        // testing - delete \/
-        FileManager.newProjectFile(new File("c:/_temp/test.fmp"));
-        System.out.println("File created");
-        Global.slide = new fantasyManager.SlideHandler("");
-        System.out.println("New slide handler created");
-        openNewScene("editing.fxml");
-        System.out.println("Scene loaded");
-        projectLoadedDisableMenuButtons(false);
-        // testing - delete /\
-
         System.out.println("Menu bar initialization");
         windowRoot = root;
         popOutMenuRoot = popOutMenu;
@@ -53,6 +48,18 @@ public class MenuBar {
                 if (aBoolean) popOutMenuClosed(); // set invisible -> path was selected
             }
         });
+
+
+        // testing -> delete \/
+//        FileManager.newProjectFile(new File("c:/_temp/test.fmp")); // new project
+        FileManager.openProjectFile(new File("c:/_temp/test.fmp")); // open project
+        System.out.println("File created");
+        Global.slide = null;
+        Global.lastVisitedSlides.clear();
+        Global.openNewSlide("");
+        System.out.println("Scene loaded");
+        projectLoadedDisableMenuButtons(false);
+        // testing -> delete /\
     }
 
     public void newProject() {
@@ -77,9 +84,9 @@ public class MenuBar {
             if (FileManager.newProjectFile(file)) {
                 // create project
                 System.out.println("File created");
-                Global.slide = new fantasyManager.SlideHandler("");
-                System.out.println("New slide handler created");
-                openNewScene("editing.fxml");
+                Global.slide = null;
+                Global.lastVisitedSlides.clear();
+                Global.openNewSlide("");
                 System.out.println("Scene loaded");
                 projectLoadedDisableMenuButtons(false);
                 // project created
@@ -148,9 +155,9 @@ public class MenuBar {
             if (FileManager.openProjectFile(file)) {
                 // load project
                 System.out.println("File opened");
-                Global.slide = new SlideHandler("");
-                System.out.println("New slide handler created");
-                openNewScene("editing.fxml");
+                Global.slide = null;
+                Global.lastVisitedSlides.clear();
+                Global.openNewSlide("");
                 System.out.println("Scene loaded");
                 // project loaded
             } else {
@@ -164,23 +171,25 @@ public class MenuBar {
     }
 
     public void switchToView() {
-        if (selectedEditMode) {
+        if (Global.editMode) {
             // switch to view mode
             System.out.println("Switching to view mode...");
             FileManager.save();
-            openNewScene("view.fxml");
+            Global.openNewScene("view.fxml");
             projectLoadedDisableMenuButtons(true);
+            Global.editMode = false;
         } else {
             // view mode already selected
             System.out.println("View mode already selected");
         }
     }
     public void switchToEdit() {
-        if (!selectedEditMode) {
+        if (!Global.editMode) {
             // switch to edit mode
             System.out.println("Switching to edit mode...");
-            openNewScene("editing.fxml");
+            Global.openNewScene("editor.fxml");
             projectLoadedDisableMenuButtons(false);
+            Global.editMode = true;
         } else {
             // edit mode already selected
             System.out.println("Edit mode already selected");
@@ -219,8 +228,9 @@ public class MenuBar {
     public void openGoTo() {
         System.out.println("Opening go to menu");
 
-        Global.selectSlidePrompt = "Jít na";
-        Global.selectSlidePane = popOutMenu;
+        Global.selectSlide_Prompt = "Jít na";
+        Global.selectSlide_Pane = popOutMenu;
+        Global.selectSlide_SearchAlsoForCurrentSlide = false;
         openPopOutMenu("selectSlide.fxml");
 
         System.out.println("Go to menu opened");
@@ -228,18 +238,13 @@ public class MenuBar {
 
     private void popOutMenuClosed() {
         System.out.println("Pop out menu closed");
+        // go to slide
         if (openedInPopOutMenu.equals("selectSlide.fxml")) {
             System.out.println("Closed select slide");
-            String goToPath = Global.selectSlideSelected;
+            String goToPath = Global.selectSlide_Selected;
             System.out.println("Go to path: " + goToPath);
             if (goToPath != null) {
-                if (selectedEditMode) {
-                    FileManager.save();
-                    Global.slide = new SlideHandler(goToPath);
-                    openNewScene("editing.fxml");
-                } else {
-                    openNewScene("view.fxml");
-                }
+                Global.openNewSlide(goToPath);
             }
         }
     }
@@ -254,17 +259,6 @@ public class MenuBar {
         goToButton.setDisable(disable);
     }
 
-    private void openNewScene(String scenePath) {
-        System.out.println("Opening scene: " + scenePath);
-        try {
-            Pane pane = FXMLLoader.load(getClass().getResource(scenePath));
-            root.getChildren().removeAll(root.getChildren());
-            root.getChildren().addAll(pane);
-        } catch (IOException ex) {
-            System.out.println("No chance to get there, error: " +ex.toString());
-            // No chance to get there until all opened scenes are available
-        }
-    }
     private void openPopOutMenu(String menuPath) {
         System.out.println("Opening pop out menu: " + menuPath);
         try {
