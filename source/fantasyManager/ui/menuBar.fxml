@@ -18,68 +18,57 @@
   ~ Please do not remove this comment!
   -->
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.MenuBar">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.MenuBar">
     <BorderPane prefHeight="700.0" prefWidth="1000.0">
         <top>
             <MenuBar BorderPane.alignment="CENTER">
                 <Menu mnemonicParsing="false" text="Soubor">
                     <MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProject" text="Nový projekt">
                         <accelerator>
-                            <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                            <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                         </accelerator>
                     </MenuItem>
-                    <MenuItem fx:id="saveProject" mnemonicParsing="false" onAction="#saveProject"
-                              text="Uložit projekt">
+                    <MenuItem fx:id="saveProject" mnemonicParsing="false" onAction="#saveProject" text="Uložit projekt">
                         <accelerator>
-                            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                         </accelerator>
                     </MenuItem>
-                    <MenuItem fx:id="saveProjectAs" mnemonicParsing="false" onAction="#saveProjectAs"
-                              text="Uložit projekt jako">
+                    <MenuItem fx:id="saveProjectAs" mnemonicParsing="false" onAction="#saveProjectAs" text="Uložit projekt jako">
                         <accelerator>
-                            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN"
-                                                shortcut="UP"/>
+                            <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                         </accelerator>
                     </MenuItem>
-                    <MenuItem fx:id="openProject" mnemonicParsing="false" onAction="#openProject"
-                              text="Otevřít projekt">
+                    <MenuItem fx:id="openProject" mnemonicParsing="false" onAction="#openProject" text="Otevřít projekt">
                         <accelerator>
-                            <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                            <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                         </accelerator>
                     </MenuItem>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Přidat">
-                    <MenuItem fx:id="addCharacter" disable="true" mnemonicParsing="false" onAction="#addCharacter"
-                              text="Postavu"/>
-                    <MenuItem fx:id="addPlace" disable="true" mnemonicParsing="false" onAction="#addPlace"
-                              text="Místo"/>
-                    <MenuItem fx:id="addOrganisation" disable="true" mnemonicParsing="false"
-                              onAction="#addOrganisation" text="Organizaci"/>
-                    <MenuItem fx:id="addOther" disable="true" mnemonicParsing="false" onAction="#addOther"
-                              text="Ostatní"/>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Úpravy" visible="false">
-                    <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undo" text="Zpět"/>
-                    <MenuItem mnemonicParsing="false" onAction="#redo" text="Znovu"/>
+                <Menu fx:id="edit" mnemonicParsing="false" text="Úpravy">
+                   <Menu mnemonicParsing="false" text="Přidat">
+                       <MenuItem fx:id="addCharacter" disable="true" mnemonicParsing="false" onAction="#addCharacter" text="Postavu" />
+                       <MenuItem fx:id="addPlace" disable="true" mnemonicParsing="false" onAction="#addPlace" text="Místo" />
+                       <MenuItem fx:id="addOrganisation" disable="true" mnemonicParsing="false" onAction="#addOrganisation" text="Organizaci" />
+                       <MenuItem fx:id="addOther" disable="true" mnemonicParsing="false" onAction="#addOther" text="Ostatní" />
+                   </Menu>
+               <MenuItem fx:id="deleteSlide" mnemonicParsing="false" onAction="#deleteSlide" text="Smazat slide" />
+                    <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undo" text="Zpět" visible="false" />
+                    <MenuItem fx:id="redo" mnemonicParsing="false" onAction="#redo" text="Znovu" visible="false" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="Pohled">
-                    <RadioMenuItem fx:id="viewMode" mnemonicParsing="false" onAction="#switchToView"
-                                   text="Režim zobrazení">
+                    <RadioMenuItem mnemonicParsing="false" onAction="#switchToView" text="Režim zobrazení">
                         <toggleGroup>
-                            <ToggleGroup fx:id="editOrViewSelect"/>
+                            <ToggleGroup fx:id="editOrViewSelect" />
                         </toggleGroup>
                     </RadioMenuItem>
-                    <RadioMenuItem fx:id="editMode" mnemonicParsing="false" onAction="#switchToEdit" selected="true"
-                                   text="Režim úpravy" toggleGroup="$editOrViewSelect"/>
-                    <SeparatorMenuItem mnemonicParsing="false"/>
-                    <MenuItem fx:id="goToButton" disable="true" mnemonicParsing="false" onAction="#openGoTo"
-                              text="Jít na ..."/>
+                    <RadioMenuItem mnemonicParsing="false" onAction="#switchToEdit" selected="true" text="Režim úpravy" toggleGroup="$editOrViewSelect" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem fx:id="goToButton" mnemonicParsing="false" onAction="#openGoTo" text="Jít na ..." />
                 </Menu>
             </MenuBar>
         </top>
         <center>
-          <Pane fx:id="root" prefHeight="675.0" prefWidth="1000.0" BorderPane.alignment="CENTER"/>
+          <Pane fx:id="root" prefHeight="675.0" prefWidth="1000.0" BorderPane.alignment="CENTER" />
         </center>
     </BorderPane>
     <Pane fx:id="popOutMenu" layoutX="50.0" layoutY="50.0" prefHeight="600.0" prefWidth="900.0" visible="false">

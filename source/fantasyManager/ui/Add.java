@@ -54,6 +54,9 @@ public class Add {
         String slidePath = FileManager.addSlide(type, name, upSlidePath);
         // Open new slide
         Global.openNewSlide(slidePath);
+        // Add up slide to linkPointingHere
+        EditorButton.add_LinkPointingHere_ToBasicSlideInfo(Global.slide.upSlide);
+
         MenuBar.popOutMenuRoot.setVisible(false);
     }
     public void cancel() {

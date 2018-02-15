@@ -7,6 +7,7 @@
 
 package fantasyManager.ui;
 
+import fantasyManager.BasicSlideInfo;
 import fantasyManager.FileManager;
 import fantasyManager.Global;
 import javafx.beans.value.ChangeListener;
@@ -20,13 +21,14 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MenuBar {
 
     public static Pane windowRoot;
     public static Pane popOutMenuRoot;
+    public static MenuItem deleteSlideButton;
 
-    public static boolean selectedEditMode = true;
     private boolean selectFileWindowOpened = false;
     @FXML private Pane root;
     @FXML private MenuItem addCharacter;
@@ -35,12 +37,33 @@ public class MenuBar {
     @FXML private MenuItem addOther;
     @FXML private MenuItem goToButton;
     @FXML private Pane popOutMenu;
+    @FXML private MenuItem edit;
+    @FXML private MenuItem deleteSlide;
     private String openedInPopOutMenu;
 
     @FXML public void initialize() {
         System.out.println("Menu bar initialization");
+
+        // save parts of scene to global variables
         windowRoot = root;
         popOutMenuRoot = popOutMenu;
+        deleteSlideButton = deleteSlide;
+
+        addPopOutMenuCloseListener();
+
+
+        // testing -> delete \/
+//        FileManager.newProjectFile(new File("c:/_temp/test.fmp")); // new project
+//        FileManager.openProjectFile(new File("c:/_temp/test.fmp")); // open project
+//        System.out.println("File created");
+//        Global.slide = null;
+//        Global.lastVisitedSlides.clear();
+//        Global.openNewSlide("");
+//        System.out.println("Scene loaded");
+//        projectLoadedDisableMenuButtons(false);
+        // testing -> delete /\
+    }
+    private void addPopOutMenuCloseListener() {
         popOutMenu.visibleProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observableValue, final Boolean aBoolean,
@@ -48,18 +71,6 @@ public class MenuBar {
                 if (aBoolean) popOutMenuClosed(); // set invisible -> path was selected
             }
         });
-
-
-        // testing -> delete \/
-//        FileManager.newProjectFile(new File("c:/_temp/test.fmp")); // new project
-        FileManager.openProjectFile(new File("c:/_temp/test.fmp")); // open project
-        System.out.println("File created");
-        Global.slide = null;
-        Global.lastVisitedSlides.clear();
-        Global.openNewSlide("");
-        System.out.println("Scene loaded");
-        projectLoadedDisableMenuButtons(false);
-        // testing -> delete /\
     }
 
     public void newProject() {
@@ -89,7 +100,6 @@ public class MenuBar {
                 Global.openNewSlide("");
                 System.out.println("Scene loaded");
                 projectLoadedDisableMenuButtons(false);
-                // project created
             } else {
                 System.out.println("File not created: " + file);
             }
@@ -159,7 +169,6 @@ public class MenuBar {
                 Global.lastVisitedSlides.clear();
                 Global.openNewSlide("");
                 System.out.println("Scene loaded");
-                // project loaded
             } else {
                 System.out.println("File not opened: " + file);
             }
@@ -178,6 +187,7 @@ public class MenuBar {
             Global.openNewScene("view.fxml");
             projectLoadedDisableMenuButtons(true);
             Global.editMode = false;
+            edit.setDisable(true);
         } else {
             // view mode already selected
             System.out.println("View mode already selected");
@@ -190,6 +200,7 @@ public class MenuBar {
             Global.openNewScene("editor.fxml");
             projectLoadedDisableMenuButtons(false);
             Global.editMode = true;
+            edit.setDisable(false);
         } else {
             // edit mode already selected
             System.out.println("Edit mode already selected");
@@ -225,6 +236,67 @@ public class MenuBar {
         openPopOutMenu("add.fxml");
     }
 
+    public void deleteSlide() {
+        // delete only if not main slide
+        if (Global.slide.path.length() > 10) {
+            System.out.println(".Deleting slide: " + Global.slide.path);
+
+            if (doYouReallyWantToDeleteSlide()) {
+                System.out.println("Deletion confirmed, deleting");
+                int slidePositionInSlidesList = Global.getSlidePositionInSlidesListByPath(Global.slide.path);
+                Global.slidesList.remove(slidePositionInSlidesList);
+
+                // remove all occurrences in lastVisitedSlides
+                for (int i = 0; i < Global.lastVisitedSlides.size(); i++)
+                    if (Global.lastVisitedSlides.get(i).equals(Global.slide.path))
+                        Global.lastVisitedSlides.remove(i);
+
+                // remove all occurrences in slidesPointingHere
+                for (BasicSlideInfo slideInfo : Global.slidesList)
+                    for (int i = 0; i < slideInfo.slidesPointingHere.size(); i++)
+                        if (slideInfo.slidesPointingHere.get(i).equals(Global.slide.path))
+                            slideInfo.slidesPointingHere.remove(i);
+
+
+                FileManager.deleteFile(Global.slide.path);
+                String upSlidePath = Global.slide.upSlide;
+                Global.slide = null;
+                Global.openNewSlide(upSlidePath);
+
+                System.out.println("Slide deleted.");
+            } else {
+                System.out.println("Slide deletion canceled.");
+            }
+
+        } else {
+            System.out.println(".Main slide cant be deleted.");
+        }
+    }
+    private boolean doYouReallyWantToDeleteSlide() {
+        BasicSlideInfo slideInfo = Global.getSlideInSlidesListByPath(Global.slide.path);
+        StringBuilder textBuilder = new StringBuilder();
+        if (slideInfo != null && !slideInfo.slidesPointingHere.isEmpty()) {
+            textBuilder.append("Na tento slide odkazují některé odkazy z: \n");
+            ArrayList<String> alreadyAdded = new ArrayList<>();
+            for (String subSlidePath : slideInfo.slidesPointingHere) {
+                if (!alreadyAdded.contains(subSlidePath)) {
+                    BasicSlideInfo subSlide = Global.getSlideInSlidesListByPath(subSlidePath);
+                    if (subSlide == null) {
+                        textBuilder.append("Hlavní rozcestník");
+                    } else {
+                        textBuilder.append(subSlide.name);
+                    }
+                    textBuilder.append("\n");
+                    alreadyAdded.add(subSlidePath);
+                }
+            }
+        }
+
+        textBuilder.append("\nOpravdu chceš smazat tento slide?");
+
+        return Global.areYouSureDialog("Opravdu chceš smazat tento slide?", textBuilder.toString());
+    }
+
     public void openGoTo() {
         System.out.println("Opening go to menu");
 
@@ -256,7 +328,6 @@ public class MenuBar {
         addPlace.setDisable(disable);
         addOrganisation.setDisable(disable);
         addOther.setDisable(disable);
-        goToButton.setDisable(disable);
     }
 
     private void openPopOutMenu(String menuPath) {

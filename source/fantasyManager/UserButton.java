@@ -40,7 +40,7 @@ public class UserButton {
     }
     public UserButton(String title, String subTitle, int buttonId, int typeOfButton, String linkTarget, String text,
                       ArrayList<UserButton> leftButtons, ArrayList<UserButton> rightButtons) {
-        System.out.println("Creating button class with: title = " +title+ ", subtitile = " +subTitle+
+        System.out.println("Creating button class with: title = " +title+ ", subtitle = " +subTitle+
                 ", buttonId = " +buttonId+ ", typeOfButton = " +typeOfButton+ ", linkTarget = " +linkTarget+
                 ", text = " +text+ ", leftButtons, rightButtons");
         this.title = title;

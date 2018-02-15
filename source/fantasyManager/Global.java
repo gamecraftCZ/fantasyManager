@@ -8,15 +8,12 @@
 package fantasyManager;
 
 import fantasyManager.ui.MenuBar;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -55,6 +52,8 @@ public class Global {
         }
     }
     public static void openNewSlide(String slidePath) {
+        // if slide with this path does not exists -> open main slide
+        if (!slideWithPathExists(slidePath)) slidePath = "";
         // save current slide path
         String currentSlidePath = "";
         if (slide != null) currentSlidePath = Global.slide.path;
@@ -96,6 +95,13 @@ public class Global {
             // No chance to get there until all scenes that are opening are available
         }
     }
+    public static boolean slideWithPathExists(String path) {
+        for (BasicSlideInfo slide : slidesList) {
+            if (slide.path.equals(path))
+                return true;
+        }
+        return false;
+    }
 
     public static ArrayList<BasicSlideInfo> slidesList = new ArrayList<>();
     public static int getSlidePositionInSlidesListByPath(String path) {
@@ -106,6 +112,14 @@ public class Global {
             }
         }
         return pos;
+    }
+    public static BasicSlideInfo getSlideInSlidesListByPath(String path) {
+        int slidePos = getSlidePositionInSlidesListByPath(path);
+        if (slidePos == -1) {
+            return null;
+        } else {
+            return slidesList.get(slidePos);
+        }
     }
 
     public static UserButton buttonEditor_button;
@@ -128,15 +142,10 @@ public class Global {
         label.setText(text);
         Button closeButton = new Button("OK");
         closeButton.setOnAction(e -> window.close());
-        closeButton.setOnKeyPressed(new EventHandler<KeyEvent>()
-        {
-            @Override
-            public void handle(KeyEvent keyEvent)
+        closeButton.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
             {
-                if(keyEvent.getCode() == KeyCode.ENTER)
-                {
-                    window.close();
-                }
+                window.close();
             }
         });
 
@@ -145,6 +154,7 @@ public class Global {
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
+        window.setResizable(false);
         window.setScene(scene);
         window.showAndWait();
     }
@@ -158,20 +168,14 @@ public class Global {
         Label label = new Label();
         label.setText(text);
         Button noButton = new Button("No");
-        noButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                window.close();
-                FileManager.saved = false;
-            }
+        noButton.setOnAction(e -> {
+            window.close();
+            FileManager.saved = false;
         });
         Button yesButton = new Button("Yes");
-        yesButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                window.close();
-                FileManager.saved = true;
-            }
+        yesButton.setOnAction(e -> {
+            window.close();
+            FileManager.saved = true;
         });
 
         VBox layout = new VBox(10);
@@ -179,8 +183,41 @@ public class Global {
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
+        window.setResizable(false);
         window.setScene(scene);
         window.showAndWait();
+    }
+    private static boolean dialogOutput;
+    public static boolean areYouSureDialog(String title, String text) {
+        Stage window = new Stage();
+
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(title);
+        window.setMinWidth(250);
+
+        Label label = new Label();
+        label.setText(text);
+        Button noButton = new Button("No");
+        noButton.setOnAction(e -> {
+            window.close();
+            dialogOutput = false;
+        });
+        Button yesButton = new Button("Yes");
+        yesButton.setOnAction(e -> {
+            window.close();
+            dialogOutput = true;
+        });
+
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, noButton, yesButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout);
+        window.setResizable(false);
+        window.setScene(scene);
+        dialogOutput = false;
+        window.showAndWait();
+        return dialogOutput;
     }
 
 }

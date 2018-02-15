@@ -150,17 +150,6 @@ public class EditorButton {
     private void typeChanged(String buttonType) {
         System.out.println("New button type: " + buttonType);
 
-        // if link was selected -> remove current link from slide it was pointing
-        for (BasicSlideInfo slideInfo : Global.slidesList) {
-            for (int ii = 0; ii < slideInfo.slidesPointingHere.size(); ii++) {
-                if (slideInfo.slidesPointingHere.get(ii).equals(editingButton.linkTarget)) {
-                    System.out.println("Removing link pointing here");
-                    slideInfo.slidesPointingHere.remove(ii);
-                    break;
-                }
-            }
-        }
-
         switch (buttonType) {
             case "rozcestník":
                 // if type is 2 -> list of another buttons
@@ -168,6 +157,7 @@ public class EditorButton {
                 text.setVisible(false);
                 buttons.setVisible(true);
                 link.setVisible(false);
+                remove_linkPointingHere_fromBasicSlideInfo(editingButton.linkTarget);
                 break;
             case "text":
                 // if type is 1 -> text field
@@ -175,6 +165,7 @@ public class EditorButton {
                 text.setVisible(true);
                 buttons.setVisible(false);
                 link.setVisible(false);
+                remove_linkPointingHere_fromBasicSlideInfo(editingButton.linkTarget);
                 break;
             default:
                 // if type is 0 -> link to another slide
@@ -188,13 +179,30 @@ public class EditorButton {
 
         FileManager.saved = false;
     }
-    private void add_LinkPointingHere_ToBasicSlideInfo(String linkPath) {
+    public static void add_LinkPointingHere_ToBasicSlideInfo(String linkPath) {
         if (!linkPath.isEmpty()) {
-            int linkPosition = Global.getSlidePositionInSlidesListByPath(linkPath);
-            BasicSlideInfo slide = Global.slidesList.get(linkPosition);
-            System.out.println("Adding link pointing here: " + linkPath);
-            slide.slidesPointingHere.add(linkPath);
+            BasicSlideInfo slide = Global.getSlideInSlidesListByPath(linkPath);
+            if (slide == null) {
+                return;
+            }
+            System.out.println("Adding link pointing here \"" + Global.slide.path + "\" to " + slide.path);
+            slide.slidesPointingHere.add(Global.slide.path);
         }
+    }
+    public static void remove_linkPointingHere_fromBasicSlideInfo(String linkPath) {
+        BasicSlideInfo slideInfo = Global.getSlideInSlidesListByPath(linkPath);
+        if (slideInfo == null) {
+            return;
+        }
+        for (int i = 0; i < slideInfo.slidesPointingHere.size(); i++) {
+            if (slideInfo.slidesPointingHere.get(i).equals(Global.slide.path)) {
+                System.out.println("Removing link pointing here");
+                slideInfo.slidesPointingHere.remove(i);
+                return;
+            }
+        }
+        System.out.println("NO LINK POINTING HERE REMOVED!\\/\n " +
+                "current slide path: " + Global.slide.path + " ,slide to remove: " + linkPath);
     }
 
     public void getLink() {
@@ -221,27 +229,10 @@ public class EditorButton {
                         }
                     }
 
-                    // Set path to button object
-                    editingButton.linkTarget = linkPath;
+                    remove_linkPointingHere_fromBasicSlideInfo(editingButton.linkTarget);
+                    add_LinkPointingHere_ToBasicSlideInfo(linkPath);
 
-                    // Set slidePointingHere to new slide //
-                    // Remove old
-                    for (BasicSlideInfo slideInfo : Global.slidesList) {
-                        for (int ii = 0; ii < slideInfo.slidesPointingHere.size(); ii++) {
-                            if (slideInfo.slidesPointingHere.get(ii).equals(linkPath)) {
-                                System.out.println("Removing link pointing here");
-                                slideInfo.slidesPointingHere.remove(ii);
-                                break;
-                            }
-                        }
-                    }
-                    // Add new
-                    if (!linkPath.isEmpty()) {
-                        int linkPosition = Global.getSlidePositionInSlidesListByPath(linkPath);
-                        BasicSlideInfo slide = Global.slidesList.get(linkPosition);
-                        System.out.println("Adding link pointing here: " + linkPath);
-                        slide.slidesPointingHere.add(linkPath);
-                    }
+                    editingButton.linkTarget = linkPath;
                 }
                 break;
         }
@@ -267,7 +258,7 @@ public class EditorButton {
     }
 
     public void addLeftButton() {
-        System.out.println("Adding button to left");
+        System.out.println(".Adding button to left");
         FileManager.saved = false;
 
         UserButton button = EditorManager.addNewButton(editingButton.leftButtons,

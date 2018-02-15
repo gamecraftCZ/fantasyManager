@@ -25,7 +25,7 @@ public class SlideHandler {
     public String upSlide; // slide where to go on click on up button
     public String path; // path to location of this character/place/organisation
     public String info;
-    public ArrayList<String> linksPointingHere = new ArrayList<>();
+//    public ArrayList<String> linksPointingHere = new ArrayList<>();
     public ArrayList<Integer> images = new ArrayList<>(); // list of images id's in this slide
     public ArrayList<UserButton> leftButtons = new ArrayList<>(); // list of buttons on left side
     public ArrayList<UserButton> rightButtons = new ArrayList<>(); // list of buttons on right side
@@ -34,7 +34,11 @@ public class SlideHandler {
 
     public SlideHandler(String name, String upSlide) {
         this.name = name;
-        this.upSlide = upSlide;
+        if (upSlide.length() > 10) {
+            this.upSlide = upSlide;
+        } else {
+            this.upSlide = "index.xml";
+        }
         this.path = "";
     }
     public SlideHandler(String slidePath) {
@@ -112,17 +116,6 @@ public class SlideHandler {
         expr = xPath.compile("/slide/info[1]/text()");
         this.info = (String) expr.evaluate(doc, XPathConstants.STRING);
         System.out.println("Info: " + info);
-//        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-//        // for each info
-//        for (int i = 1; i < nodeList.getLength()+1; i++) {
-//            expr = xPath.compile("/slide/info/item[" +i+ "]/name/text()");
-//            String infoName = (String) expr.evaluate(doc, XPathConstants.STRING);
-//            expr = xPath.compile("/slide/info/item[" +i+ "]/value/text()");
-//            String infoValue = (String) expr.evaluate(doc, XPathConstants.STRING);
-//            Info infoObj = new Info(infoName, infoValue);
-//            this.infos.add(infoObj);
-//            System.out.println("Info name: " +infoName+ " , value: " +infoValue);
-//        }
 
         // get images //
         System.out.println("Getting images");
@@ -132,17 +125,6 @@ public class SlideHandler {
             for (int i = 0; i < images.length; i++) {
                 this.images.add(Integer.parseInt(images[i]));
                 System.out.println("Image " + i + " = " + images[i]);
-            }
-        }
-
-        // get links pointing here //
-        System.out.println("Getting links pointing here");
-        expr = xPath.compile("/slide/linksPointingHere[1]/text()");
-        String[] linksPointingHere = ((String) expr.evaluate(doc, XPathConstants.STRING)).split(" ");
-        if (!linksPointingHere[0].equals("")) {
-            for (int i = 0; i < linksPointingHere.length; i++) {
-                this.linksPointingHere.add(linksPointingHere[i]);
-                System.out.println("Link " + i + " = " + linksPointingHere[i]);
             }
         }
 
@@ -203,7 +185,8 @@ public class SlideHandler {
             // for each button
             for (int i = 1; i < nodeList.getLength()+1; i++) {
                 System.out.println("Getting info for left sub button " +i);
-                leftButtonsList.add(getButtonInfo(xPath, doc, pathToButton + "/leftButtons/button[" +i+ "]", i));
+                leftButtonsList.add(getButtonInfo(xPath, doc,
+                        pathToButton + "/leftButtons/button[" +i+ "]", i-1));
             }
         } catch (Exception ex) {
             System.out.println("Probably no left sub buttons, error: " +ex.toString());
@@ -215,14 +198,16 @@ public class SlideHandler {
             // for each button
             for (int i = 1; i < nodeList.getLength() + 1; i++) {
                 System.out.println("Getting info for right sub button " + i);
-                rightButtonsList.add(getButtonInfo(xPath, doc, pathToButton + "/rightButtons/button[" + i + "]", i));
+                rightButtonsList.add(getButtonInfo(xPath, doc,
+                        pathToButton + "/rightButtons/button[" + i + "]", i-1));
             }
         } catch (Exception ex) {
             System.out.println("Probably no right sub buttons, error: " +ex.toString());
         }
 
 
-        UserButton userButtonObj = new UserButton(title, subTitle, buttonId, type, link, text, leftButtonsList, rightButtonsList);
+        UserButton userButtonObj = new UserButton(title, subTitle, buttonId, type, link, text,
+                leftButtonsList, rightButtonsList);
         System.out.println("Sub button info loaded");
         return userButtonObj;
     }
@@ -254,33 +239,10 @@ public class SlideHandler {
             Element infoElement = doc.createElement("info");  // create tag
             infoElement.insertBefore(doc.createTextNode(info), infoElement.getLastChild());  // add text
             slide.appendChild(infoElement);  // add tag to slide
-//            // add data to info
-//            Element[] infoData = new Element[infos.size()];
-//            Element[] infoName = new Element[infos.size()];
-//            Element[] infoValue = new Element[infos.size()];
-//            // for each info add its name and value
-//            for (int i = 0; i<infos.size();i++) {
-//                // create info Element
-//                infoData[i] = doc.createElement("item");
-//                infoElement.appendChild(infoData[i]);
-//                // set name
-//                infoName[i] = doc.createElement("name");
-//                infoName[i].insertBefore(doc.createTextNode(infos.get(i).name), infoName[i].getLastChild());
-//                infoData[i].appendChild(infoName[i]);
-//                // set value
-//                infoValue[i] = doc.createElement("value");
-//                infoValue[i].insertBefore(doc.createTextNode(infos.get(i).name), infoValue[i].getLastChild());
-//                infoData[i].appendChild(infoValue[i]);
-//            }
             // images //
             Element imagesElement = doc.createElement("images");  // create tag
             imagesElement.insertBefore(doc.createTextNode(getImagesAsString()), imagesElement.getLastChild());  // text
             slide.appendChild(imagesElement);  // add tag to slide
-            // links pointing here //
-            Element linksPointingHereElement = doc.createElement("linksPointingHere");  // create tag
-            linksPointingHereElement.insertBefore(doc.createTextNode(getLinksPointingHereAsString()),
-                    linksPointingHereElement.getLastChild());  // add text
-            slide.appendChild(linksPointingHereElement);  // add tag to slide
             // left buttons //
             if (leftButtons != null && !leftButtons.isEmpty()) {
                 slide.appendChild(getButtonsAsElement(leftButtons, "leftButtons", doc));
@@ -305,14 +267,15 @@ public class SlideHandler {
         }
         return imagesStringBuilder.toString();
     }
-    private String getLinksPointingHereAsString() {
-        StringBuilder imagesStringBuilder = new StringBuilder();
-        for (String s : linksPointingHere) {
-            imagesStringBuilder.append(s);
-            imagesStringBuilder.append(" ");
-        }
-        return imagesStringBuilder.toString();
-    }
+//    private String getLinksPointingHereAsString() {
+//        StringBuilder imagesStringBuilder = new StringBuilder();
+//        for (String s : linksPointingHere) {
+//            imagesStringBuilder.append(s);
+//            imagesStringBuilder.append(" ");
+//        }
+//        return imagesStringBuilder.toString();
+//    }
+
     private Element getButtonsAsElement(ArrayList<UserButton> buttons, String elementName, Document doc) {
         Element buttonElement = doc.createElement(elementName);
         for (UserButton button : buttons) {

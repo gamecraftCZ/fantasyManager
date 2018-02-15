@@ -29,10 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -76,7 +73,6 @@ public class FileManager {
         OutputStream outStream = null;
         boolean Return = false;
         try {
-            file.createNewFile();
             System.out.println("Creating input stream");
             inStream = FileManager.class
                     .getResourceAsStream("/resources/projectTemplate.fmp");
@@ -97,8 +93,8 @@ public class FileManager {
             Global.showError("Projekt nelze vytvoořit!", "Chyba při tvorbě projektu, error: \n" + ex.toString());
         }
         try {
-            inStream.close();
-            outStream.close();
+            if (inStream != null) inStream.close();
+            if (outStream != null) outStream.close();
         } catch(Exception ex) {
             System.out.println("Cant close stream! error: " +ex.toString());
         }
@@ -113,8 +109,7 @@ public class FileManager {
         System.out.println("Opening project file: " + file);
         Global.slidesList.clear();
         fileObject = file;
-        loadSlidesBasicInfo();
-        return true;
+        return loadSlidesBasicInfo();
     }
     private static boolean loadSlidesBasicInfo() {
         System.out.println("Loading slides basic info");
@@ -160,8 +155,10 @@ public class FileManager {
         info.id = Integer.parseInt(idString);
         info.path = node.getChildNodes().item(1).getTextContent();
         info.type = node.getParentNode().getNodeName();
-        info.slidesPointingHere.addAll(Arrays.asList(node.getChildNodes().item(2).getTextContent()
-                .split(" ")));
+        List<String> slidePointingHere = Arrays.asList(node.getChildNodes().item(2)
+                .getTextContent().split(" "));
+        if (!slidePointingHere.get(0).equals(""))
+            info.slidesPointingHere.addAll(slidePointingHere);
 
         Global.slidesList.add(info);
     }
@@ -318,20 +315,13 @@ public class FileManager {
         // save project
         return save();
     }
-    public static void copyFile(File source, File dest) throws IOException {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = new FileInputStream(source);
-            os = new FileOutputStream(dest);
+    private static void copyFile(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
             byte[] buffer = new byte[1024];
             int length;
             while ((length = is.read(buffer)) > 0) {
                 os.write(buffer, 0, length);
             }
-        } finally {
-            is.close();
-            os.close();
         }
     }
 
@@ -426,6 +416,22 @@ public class FileManager {
         item.appendChild(pathElement);
 
         return item;
+    }
+
+    public static void deleteFile(String path) {
+        System.out.println("Deleting file from project: " + path);
+
+        Map<String, String> env = new HashMap<>();
+        env.put("create", "true");
+        URI uri = URI.create("jar:" + fileObject.toURI());
+        System.out.println("Zip file path: " + uri);
+        try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
+            Path filePath = fs.getPath(path);
+            if (Files.exists(filePath)) Files.delete(filePath);
+            else System.out.println("File " + path + " doesnt exists in project file");
+        } catch (Exception e) {
+            System.out.println("Cant delete file from project, error: " + e.toString());
+        }
     }
 
     public static int addImage(File imageFile) {
@@ -533,8 +539,8 @@ public class FileManager {
             returnImage = null;
         }
         try {
-            zipFile.close();
-            stream.close();
+            if (zipFile != null) zipFile.close();
+            if (stream != null) stream.close();
         } catch(Exception ex) {
             System.out.println("Cant close stream! error: " +ex.toString());
         }
@@ -566,7 +572,7 @@ public class FileManager {
         }
     }
 
-    public static ZipFile getZipFile() throws IOException {
+    private static ZipFile getZipFile() throws IOException {
         System.out.println("Loading zip file");
         return new ZipFile(fileObject);
     }
@@ -588,24 +594,6 @@ public class FileManager {
         }
         return null;
     }
-
-
-//    public static boolean fileExistsInProject(String path) {
-//        ZipFile zip;
-//        try {
-//            zip = getZipFile();
-//            ZipEntry entry = new ZipEntry(path);
-//            zip.getEntry(path);
-//            zip.close();
-//            return true;
-////        } catch () {
-////
-//        } catch (Exception ex) {
-//            System.out.println("File exists in project, error: " + ex.toString());
-//            zip.close();
-//            return false;
-//        }
-//    }
 
 
 

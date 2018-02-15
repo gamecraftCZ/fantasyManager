@@ -2,8 +2,8 @@
 
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,57 +18,70 @@
   ~ Please do not remove this comment!
   -->
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0"
-      prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="fantasyManager.ui.Editor">
-    <TextField fx:id="name" layoutX="35.0" layoutY="35.0" prefHeight="50.0" prefWidth="550.0" promptText="Jméno">
-        <font>
-          <Font size="22.0"/>
-        </font>
-    </TextField>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.View">
+    <Button fx:id="infoButton" layoutX="625.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#infoButton">
+        <graphic>
+            <ImageView fitHeight="40.0" fitWidth="40.0" onMouseClicked="#infoButton" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../../resources/info.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+   <Label fx:id="name" layoutX="35.0" layoutY="35.0" prefHeight="50.0" prefWidth="550.0" text="Jméno">
+      <font>
+         <Font size="22.0" />
+      </font>
+   </Label>
     <Group layoutY="560.0">
-        <Button fx:id="levelUp" layoutX="143.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0">
+        <Button fx:id="slideBack" layoutX="35.0" mnemonicParsing="false" onMouseClicked="#slideBack" prefHeight="64.0" prefWidth="64.0">
             <graphic>
                 <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../../resources/arrowUp.png"/>
+                    <Image url="@../../resources/arrowLeft.png" />
                 </ImageView>
             </graphic>
         </Button>
-        <Button fx:id="levelBack" layoutX="35.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0">
+        <Button fx:id="slideUp" layoutX="143.0" mnemonicParsing="false" onMouseClicked="#slideUp" prefHeight="64.0" prefWidth="64.0">
             <graphic>
                 <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../../resources/arrowLeft.png"/>
+                    <Image url="@../../resources/arrowUp.png" />
                 </ImageView>
             </graphic>
         </Button>
+        <Label fx:id="upButtonTarget" layoutX="230.0" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="240.0" text="Hlavní menu">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
     </Group>
     <ScrollPane layoutX="485.0" layoutY="111.0" prefHeight="525.0" prefWidth="480.0">
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="520.0" prefWidth="475.0">
-            <Button layoutX="100.0" layoutY="50.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
-                <font>
-                    <Font size="17.0"/>
-                </font>
-                <graphic>
-                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../../resources/plus.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button layoutX="300.0" layoutY="50.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
-                <font>
-                    <Font size="17.0"/>
-                </font>
-                <graphic>
-                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../../resources/plus.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
-        </AnchorPane>
+        <AnchorPane fx:id="buttonsScrollAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="465.0" />
     </ScrollPane>
     <Group layoutX="35.0" layoutY="111.0">
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#838383" height="400.0" stroke="BLACK" strokeType="INSIDE"
-                   width="400.0"/>
-        <ImageView fx:id="image" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true"/>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#838383" height="400.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="400.0" />
+        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="400.0" prefWidth="400.0" text="Obrázek není k dispozici">
+            <font>
+                <Font size="21.0" />
+            </font>
+        </Label>
+        <ImageView fx:id="image" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
+        <Group fx:id="imageLeft">
+            <Button fx:id="imageLeftButton" mnemonicParsing="false" onMouseClicked="#imageLeftButton" opacity="0.0" prefHeight="400.0" prefWidth="64.0" />
+            <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="16.0" layoutY="184.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" scaleY="2.0">
+                <Image url="@../../resources/arrowLeftV2.png" />
+            </ImageView>
+        </Group>
+        <Group fx:id="imageRight" layoutX="336.0">
+            <Button fx:id="imageRightButton" mnemonicParsing="false" onMouseClicked="#imageRightButton" opacity="0.0" prefHeight="400.0" prefWidth="64.0" />
+            <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="16.0" layoutY="184.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" scaleY="2.0">
+                <Image url="@../../resources/arrowRightV2.png" />
+            </ImageView>
+        </Group>
     </Group>
+    <Pane layoutX="100.0" layoutY="50.0" prefHeight="550.0" prefWidth="800.0" visible="false">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="550.0" stroke="BLACK" strokeType="INSIDE" width="800.0" />
+        <Pane fx:id="buttonViewPane" prefHeight="550.0" prefWidth="800.0" />
+    </Pane>
+    <Pane layoutX="200.0" layoutY="60.0" prefHeight="550.0" prefWidth="600.0" visible="false">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="550.0" stroke="BLACK" strokeType="INSIDE" width="800.0" />
+        <Pane prefHeight="550.0" prefWidth="800.0" />
+    </Pane>
 </Pane>

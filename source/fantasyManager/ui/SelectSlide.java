@@ -33,11 +33,18 @@ public class SelectSlide {
 
     @FXML public void initialize() {
         System.out.println("Initializing slide select");
+
         selectPane = Global.selectSlide_Pane;
         searchAlsoForCurrentSlide = Global.selectSlide_SearchAlsoForCurrentSlide;
-        promptText.setText(Global.selectSlide_Prompt);
 
-        // Listen for Search field changes \\
+        promptText.setText(Global.selectSlide_Prompt);
+        addSearchFieldChangeListener();
+        initializeTableViewCellFactories();
+
+        // show all slides
+        newSearch("");
+    }
+    private void addSearchFieldChangeListener() {
         searchField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable,
@@ -45,49 +52,44 @@ public class SelectSlide {
                 newSearch(newValue);
             }
         });
-
-        // initialize table view \\
+    }
+    private void initializeTableViewCellFactories() {
         searchResultsColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
         searchResultsColumnValue.setCellValueFactory(new PropertyValueFactory<>("type"));
         Callback<TableColumn<BasicSlideInfo, String>, TableCell<BasicSlideInfo, String>> buttonCellFactory
                 = new Callback<TableColumn<BasicSlideInfo, String>, TableCell<BasicSlideInfo, String>>() {
+            @Override
+            public TableCell call(final TableColumn<BasicSlideInfo, String> param) {
+                return new TableCell<BasicSlideInfo, String>() {
+
+                    final Button btn = new Button("->");
+
                     @Override
-                    public TableCell call(final TableColumn<BasicSlideInfo, String> param) {
-                        return new TableCell<BasicSlideInfo, String>() {
-
-                            final Button btn = new Button("->");
-
-                            @Override
-                            public void updateItem(String item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (empty) {
-                                    setGraphic(null);
-                                    setText(null);
-                                } else {
-                                    btn.setOnAction(event -> {
-                                        BasicSlideInfo slideInfo = getTableView().getItems().get(getIndex());
-                                        System.out.println("Info name of slide to added: " + slideInfo.name);
-                                        select(slideInfo.path);
-                                    });
-                                    setGraphic(btn);
-                                    setText(null);
-                                }
-                            }
-                        };
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                BasicSlideInfo slideInfo = getTableView().getItems().get(getIndex());
+                                System.out.println("Info name of slide to added: " + slideInfo.name);
+                                select(slideInfo.path);
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
                     }
                 };
+            }
+        };
         searchResultsColumnSelect.setCellFactory(buttonCellFactory);
-
-
-
-        // show all slides
-        newSearch("");
     }
 
 
     public void selectMainSlide() {
         System.out.println("Selecting main page");
-        select("");
+        select("index.xml");
     }
     public void cancel() {
         System.out.println("Selection canceled");

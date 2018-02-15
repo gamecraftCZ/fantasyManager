@@ -32,12 +32,15 @@ public class BasicSlideInfo {
         this.id = id;
     }
 
+    // Used by tableView builder!
     public String getName() {
         return name;
     }
+    // Used by tableView builder!
     public String getPath() {
         return path;
     }
+    // Used by tableView builder!
     public String getType() {
         return type;
     }
@@ -54,10 +57,6 @@ public class BasicSlideInfo {
         Element pathElement = doc.createElement("path");
         pathElement.insertBefore(doc.createTextNode(path), pathElement.getLastChild());
         slideInfoElement.appendChild(pathElement);
-//        // set type
-//        Element typeElement = doc.createElement("type");
-//        typeElement.insertBefore(doc.createTextNode(type), typeElement.getLastChild());
-//        slideInfoElement.appendChild(typeElement);
         // set slidesPointingHere
         Element slidesPointingHereElement = doc.createElement("slidesPointingHere");
 

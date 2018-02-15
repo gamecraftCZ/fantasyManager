@@ -39,11 +39,8 @@ public class EditorManager {
             return  ((buttons2 + 1) * (buttonHeight + buttonOffsets)) + buttonOffsetFromTop;
         }
     }
-    private static double getNewAnchorSize(ArrayList<UserButton> buttons1, ArrayList<UserButton> buttons2) {
+    public static double getNewAnchorSize(ArrayList<UserButton> buttons1, ArrayList<UserButton> buttons2) {
         return getNewAnchorSize(buttons1.size(), buttons2.size());
-    }
-    private static double getNewAnchorSize(UserButton mainButton) {
-        return getNewAnchorSize(mainButton.leftButtons.size(), mainButton.rightButtons.size());
     }
     private static int getNewButtonId(ArrayList<UserButton> buttons) {
         if (buttons.isEmpty()) {
@@ -51,21 +48,6 @@ public class EditorManager {
         } else {
             return buttons.get(buttons.size() - 1).buttonId + 1;
         }
-    }
-    private static Pane getNewButtonPane(int newButtonId, boolean isRight, double width) {
-        Pane newPane = new Pane();
-        newPane.setPrefSize(width, buttonHeight);
-
-        String buttonName;
-        if (isRight) {
-            buttonName = "rightButton" + newButtonId;
-        } else {
-            buttonName = "left_Button" + newButtonId;
-        }
-        System.out.println("New button pane: " + buttonName);
-        newPane.setId(buttonName);
-
-        return newPane;
     }
     private static void addSubButtonsToButtonPane(Pane buttonPane, Button clickable, Button edit, Button close) {
         double width = buttonPane.getPrefWidth();
@@ -132,7 +114,8 @@ public class EditorManager {
         UserButton userButton = new UserButton(newButtonId);
 
         // create button pane
-        Pane newButtonPane = getNewButtonPane(newButtonId, false, buttonWidth);
+        Pane newButtonPane = new Pane();
+        newButtonPane.setPrefSize(buttonWidth, buttonHeight);
 
         // set new Button Pane
         newButtonPane.setLayoutX(buttonOffsetFromLeft);
@@ -192,7 +175,8 @@ public class EditorManager {
         }
 
         // create button pane
-        Pane newButtonPane = getNewButtonPane(buttonToAdd.buttonId, false, buttonWidth);
+        Pane newButtonPane = new Pane();
+        newButtonPane.setPrefSize(buttonWidth, buttonHeight);
 
         // set new Button Pane
         newButtonPane.setLayoutX(buttonOffsetFromLeft);
@@ -269,10 +253,33 @@ public class EditorManager {
         plusButton.setLayoutY(buttonPositionY - (buttonHeight + buttonOffsets));
         FileManager.saved = false;
 
+        // remove all links from linksPointingHere
+        switch (button.typeOfButton) {
+            // if type is 0 -> link to another slide
+            case 0:
+                EditorButton.remove_linkPointingHere_fromBasicSlideInfo(button.linkTarget);
+                break;
+            // if type is 2 -> list of another buttons
+            case 2:
+                for (UserButton userButton : button.leftButtons) removeLinksPointingHereFromButton(userButton);
+                for (UserButton userButton : button.rightButtons) removeLinksPointingHereFromButton(userButton);
+                break;
+        }
+
         System.out.println("Button deleted.");
     }
-    private static int extractButtonIdFromName(String name) {
-        return Integer.parseInt(name.substring(11, name.length()));
+    private static void removeLinksPointingHereFromButton(UserButton button) {
+        switch (button.typeOfButton) {
+            // if type is 0 -> link to another slide
+            case 0:
+                EditorButton.remove_linkPointingHere_fromBasicSlideInfo(button.linkTarget);
+                break;
+            // if type is 2 -> list of another buttons
+            case 2:
+                for (UserButton userButton : button.leftButtons) removeLinksPointingHereFromButton(userButton);
+                for (UserButton userButton : button.rightButtons) removeLinksPointingHereFromButton(userButton);
+                break;
+        }
     }
 
     public static void openButtonEditor(UserButton button, Pane editorPane) {
@@ -290,18 +297,6 @@ public class EditorManager {
             System.out.println("No chance to get there, error: " +e.toString());
             // No chance to get there until all opened scenes are in available
         }
-    }
-    public static Button getCloseButton() {
-        Button closeButton = new Button();
-        closeButton.setLayoutX(750);
-        closeButton.setLayoutY(-25);
-
-        ImageView cross = new ImageView(new Image("resources/cross.png"));
-        cross.setFitWidth(64);
-        cross.setFitHeight(64);
-        closeButton.setGraphic(cross);
-
-        return closeButton;
     }
 
 }

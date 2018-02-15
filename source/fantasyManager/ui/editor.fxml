@@ -35,21 +35,21 @@
     <Group layoutY="560.0">
         <Button fx:id="slideBack" layoutX="35.0" mnemonicParsing="false" onMouseClicked="#slideBack" prefHeight="64.0" prefWidth="64.0">
             <graphic>
-                <ImageView fx:id="backButton" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../resources/arrowLeft.png" />
                 </ImageView>
             </graphic>
         </Button>
         <Button fx:id="slideUp" layoutX="143.0" mnemonicParsing="false" onMouseClicked="#slideUp" prefHeight="64.0" prefWidth="64.0">
             <graphic>
-                <ImageView fx:id="upButton" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../resources/arrowUp.png" />
                 </ImageView>
             </graphic>
         </Button>
         <Button fx:id="editUpSlideButton" layoutX="230.0" mnemonicParsing="false" onMouseClicked="#editUpSlide" prefHeight="45.0" prefWidth="45.0">
             <graphic>
-                <ImageView fx:id="upButton1" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../resources/edit.png" />
                 </ImageView>
             </graphic>
@@ -111,7 +111,7 @@
             </ImageView>
         </Group>
         <Group fx:id="deleteImage" layoutX="350.0">
-            <Button fx:id="deleteImageButton" mnemonicParsing="false" onMouseClicked="#deleteImage" opacity="0.0" prefHeight="50.0" prefWidth="50.0" />
+            <Button mnemonicParsing="false" onMouseClicked="#deleteImage" opacity="0.0" prefHeight="50.0" prefWidth="50.0" />
             <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="9.0" layoutY="9.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                 <Image url="@../../resources/delete.png" />
             </ImageView>

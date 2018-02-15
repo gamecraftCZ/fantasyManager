@@ -12,11 +12,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
 
 public class EditorSlideInfo {
 
-    @FXML TextArea textArea;
+    @FXML private TextArea textArea;
 
     @FXML void initialize() {
         textArea.setText(Global.slide.info);

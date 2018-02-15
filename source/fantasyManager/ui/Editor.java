@@ -55,11 +55,16 @@ public class Editor {
 
     private int currentImage;
     private boolean selectFileWindowOpened = false;
-    private boolean editingButton = false;
 
     @FXML public void initialize() {
         System.out.println(".Initializing editor");
         try {
+            // if current slide is main slide -> disable delete button
+            if (Global.slide.path.length() < 10) {
+                MenuBar.deleteSlideButton.setDisable(true);
+            } else {
+                MenuBar.deleteSlideButton.setDisable(false);
+            }
 
             name.setText(Global.slide.name);
             setUpNavigationButtons();
@@ -102,7 +107,6 @@ public class Editor {
                     rightPlus, scrollAnchor, buttonWidth, rightButtonsOffsetFromLeft, buttonEditorPane);
         }
     }
-
     private void setUpNavigationButtons() {
         // is root -> no up slide
         if (Global.slide.path.length() < 10) {
@@ -281,13 +285,8 @@ public class Editor {
         System.out.println("Button added to right.");
     }
 
-    public void closeButtonsPane() {
-        buttonEditorRoot.setVisible(false);
-        editingButton = false;
-    }
     private void openButtonScene(String path) {
         System.out.println("Opening scene in button pane: " + path);
-        editingButton = true;
         try {
             Pane pane = FXMLLoader.load(getClass().getResource(path));
             buttonEditorPane.getChildren().removeAll(buttonEditorPane.getChildren());
@@ -342,6 +341,8 @@ public class Editor {
     private void newUpSlideSelected() {
         System.out.println("Path selected: " + Global.selectSlide_Selected);
         if (Global.selectSlide_Selected != null) {
+            EditorButton.remove_linkPointingHere_fromBasicSlideInfo(Global.slide.upSlide);
+            EditorButton.add_LinkPointingHere_ToBasicSlideInfo(Global.selectSlide_Selected);
             Global.slide.upSlide = Global.selectSlide_Selected;
             if (Global.slide.upSlide.isEmpty()) {
                 upButtonTarget.setText("Hlavní rozcestník");
