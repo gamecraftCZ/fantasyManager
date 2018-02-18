@@ -22,16 +22,19 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
+import static fantasyManager.ui.ViewManager.centerImage;
+
 public class View {
 
-    private static final double buttonWidth = 220;
+    private static final double buttonWidth = 370;
     private static final double leftButtonsOffsetFromLeft = 16;
-    private static final double rightButtonsOffsetFromLeft = 250;
+    private static final double rightButtonsOffsetFromLeft = 400;
 
     @FXML private Label name;
     @FXML private ImageView image;
     @FXML private Group imageLeft;
     @FXML private Group imageRight;
+    @FXML private Label pictureNotAvailableText;
     @FXML private Label upButtonTarget;
     @FXML private Button slideUp;
     @FXML private Pane buttonViewPane;
@@ -57,7 +60,14 @@ public class View {
         imageLeft.setVisible(false);
         if (!Global.slide.images.isEmpty()) {
             currentImage = 0;
-            image.setImage(FileManager.getImage(Global.slide.images.get(0)));
+            Image imageVar = FileManager.getImage(Global.slide.images.get(0));
+            image.setImage(imageVar);
+            centerImage(image);
+            if (imageVar == null) {
+                pictureNotAvailableText.setVisible(true);
+            } else {
+                pictureNotAvailableText.setVisible(false);
+            }
             if (Global.slide.images.size() > 1) {
                 imageRight.setVisible(true);
             } else {
@@ -113,6 +123,12 @@ public class View {
         System.out.println("Now image position is " +currentImage);
         Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
         image.setImage(imageVar);
+        centerImage(image);
+        if (imageVar == null) {
+            pictureNotAvailableText.setVisible(true);
+        } else {
+            pictureNotAvailableText.setVisible(false);
+        }
         imageRight.setVisible(true);
         if (currentImage == 0) {
             System.out.println("This image is 0");
@@ -123,7 +139,14 @@ public class View {
         System.out.println("Going one image right");
         currentImage += 1;
         System.out.println("Now image position is " +currentImage);
-        image.setImage(FileManager.getImage(Global.slide.images.get(currentImage)));
+        Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
+        image.setImage(imageVar);
+        centerImage(image);
+        if (imageVar == null) {
+            pictureNotAvailableText.setVisible(true);
+        } else {
+            pictureNotAvailableText.setVisible(false);
+        }
         imageLeft.setVisible(true);
         if ((currentImage + 1) == Global.slide.images.size()) {
             System.out.println("Image " +currentImage+ " is last image, image on position " +Global.slide.images.size());

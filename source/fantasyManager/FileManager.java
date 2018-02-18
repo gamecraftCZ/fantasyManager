@@ -164,7 +164,7 @@ public class FileManager {
     }
 
     public static boolean save() {
-        if (!fileObject.exists()) {
+        if (fileObject == null) {
             System.out.println("No loaded project -> can't be saved");
             return true;
         } else {

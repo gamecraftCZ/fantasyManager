@@ -11,6 +11,7 @@ import fantasyManager.Global;
 import fantasyManager.UserButton;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -20,6 +21,30 @@ public class ViewManager {
     private static final double buttonHeight = 50;
     private static final double buttonOffsets = 14;
     private static final double buttonOffsetFromTop = 74;
+
+    public static void centerImage(ImageView imageView) {
+        if (imageView.getImage() != null) {
+            double w = 0;
+            double h = 0;
+
+            double ratioX = imageView.getFitWidth() / imageView.getImage().getWidth();
+            double ratioY = imageView.getFitHeight() / imageView.getImage().getHeight();
+
+            double reducCoeff = 0;
+            if(ratioX >= ratioY) {
+                reducCoeff = ratioY;
+            } else {
+                reducCoeff = ratioX;
+            }
+
+            w = imageView.getImage().getWidth() * reducCoeff;
+            h = imageView.getImage().getHeight() * reducCoeff;
+
+            imageView.setX((imageView.getFitWidth() - w) / 2);
+            imageView.setY((imageView.getFitHeight() - h) / 2);
+
+        }
+    }
 
     private static void addSubButtonsToButtonPane(Pane buttonPane, Button clickable) {
         double width = buttonPane.getPrefWidth();
