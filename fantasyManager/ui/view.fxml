@@ -18,7 +18,7 @@
   ~ Please do not remove this comment!
   -->
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.View">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.View">
     <Button fx:id="infoButton" layoutX="625.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#infoButton">
         <graphic>
             <ImageView fitHeight="40.0" fitWidth="40.0" onMouseClicked="#infoButton" pickOnBounds="true" preserveRatio="true">
@@ -52,12 +52,12 @@
             </font>
         </Label>
     </Group>
-    <ScrollPane layoutX="485.0" layoutY="111.0" prefHeight="525.0" prefWidth="480.0">
+    <ScrollPane layoutX="485.0" layoutY="111.0" prefHeight="525.0" prefWidth="780.0">
         <AnchorPane fx:id="buttonsScrollAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="465.0" />
     </ScrollPane>
     <Group layoutX="35.0" layoutY="111.0">
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#838383" height="400.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="400.0" />
-        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="400.0" prefWidth="400.0" text="Obrázek není k dispozici">
+        <Label fx:id="pictureNotAvailableText" alignment="CENTER" contentDisplay="CENTER" prefHeight="400.0" prefWidth="400.0" text="Obrázek není k dispozici">
             <font>
                 <Font size="21.0" />
             </font>

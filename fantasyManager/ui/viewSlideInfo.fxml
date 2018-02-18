@@ -20,7 +20,7 @@
             <Font size="55.0" />
         </font>
     </Label>
-   <Label fx:id="textArea" alignment="TOP_LEFT" layoutX="25.0" layoutY="100.0" prefHeight="425.0" prefWidth="750.0" text="Info..." />
+   <Label fx:id="textArea" alignment="TOP_LEFT" layoutX="25.0" layoutY="100.0" prefHeight="425.0" prefWidth="750.0" text="Info..." wrapText="true" />
     <Button layoutX="740.0" layoutY="-20.0" mnemonicParsing="false" onMouseClicked="#close">
         <graphic>
             <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">

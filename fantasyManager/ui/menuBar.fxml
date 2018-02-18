@@ -18,8 +18,8 @@
   ~ Please do not remove this comment!
   -->
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.MenuBar">
-    <BorderPane prefHeight="700.0" prefWidth="1000.0">
+<AnchorPane prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.MenuBar">
+    <BorderPane prefHeight="700.0" prefWidth="1300.0">
         <top>
             <MenuBar BorderPane.alignment="CENTER">
                 <Menu mnemonicParsing="false" text="Soubor">

@@ -28,12 +28,16 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+
+import static fantasyManager.ui.ViewManager.centerImage;
 
 public class Editor {
 
-    private static final double buttonWidth = 220;
+    private static final double buttonWidth = 370;
     private static final double leftButtonsOffsetFromLeft = 16;
-    private static final double rightButtonsOffsetFromLeft = 250;
+    private static final double rightButtonsOffsetFromLeft = 400;
 
     @FXML private TextField name;
     @FXML private ImageView image;
@@ -41,6 +45,7 @@ public class Editor {
     @FXML private Group imageRight;
     @FXML private Group addImage;
     @FXML private Group deleteImage;
+    @FXML private Label pictureNotAvailableText;
     @FXML private Button leftPlus;
     @FXML private Button rightPlus;
     @FXML private Pane buttonEditorRoot;
@@ -80,7 +85,14 @@ public class Editor {
         imageLeft.setVisible(false);
         if (!Global.slide.images.isEmpty()) {
             currentImage = 0;
-            image.setImage(FileManager.getImage(Global.slide.images.get(0)));
+            Image imageVar = FileManager.getImage(Global.slide.images.get(0));
+            image.setImage(imageVar);
+            centerImage(image);
+            if (imageVar == null) {
+                pictureNotAvailableText.setVisible(true);
+            } else {
+                pictureNotAvailableText.setVisible(false);
+            }
             if (Global.slide.images.size() > 1) {
                 imageRight.setVisible(true);
                 addImage.setVisible(false);
@@ -160,6 +172,12 @@ public class Editor {
         System.out.println("Now image position is " +currentImage);
         Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
         image.setImage(imageVar);
+        centerImage(image);
+        if (imageVar == null) {
+            pictureNotAvailableText.setVisible(true);
+        } else {
+            pictureNotAvailableText.setVisible(false);
+        }
         imageRight.setVisible(true);
         addImage.setVisible(false);
         if (currentImage == 0) {
@@ -171,7 +189,14 @@ public class Editor {
         System.out.println("Going one image right");
         currentImage += 1;
         System.out.println("Now image position is " +currentImage);
-        image.setImage(FileManager.getImage(Global.slide.images.get(currentImage)));
+        Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
+        image.setImage(imageVar);
+        centerImage(image);
+        if (imageVar == null) {
+            pictureNotAvailableText.setVisible(true);
+        } else {
+            pictureNotAvailableText.setVisible(false);
+        }
         imageLeft.setVisible(true);
         if ((currentImage + 1) == Global.slide.images.size()) {
             System.out.println("Image " +currentImage+ " is last image, image on position " +Global.slide.images.size());
@@ -192,6 +217,10 @@ public class Editor {
         System.out.println("Select file in file choose dialog");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Přidání obrázku");
+        if (Global.lastFolderImageGotFrom != null && Files.exists(FileSystems.getDefault()
+                .getPath(Global.lastFolderImageGotFrom.getPath()))) {
+            fileChooser.setInitialDirectory(Global.lastFolderImageGotFrom);
+        }
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Soubor obrázku", "*.png", "*.jpg", "*.bmp"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Všechny soubory", "*"));
         File file = fileChooser.showOpenDialog(stage);
@@ -199,6 +228,9 @@ public class Editor {
             System.out.println("Opening file: " + file);
             int imageId = FileManager.addImage(file);
             if (imageId != -1) {
+                // save last folder images got from
+                Global.lastFolderImageGotFrom = file.getParentFile();
+
                 // load image
                 System.out.println("Image added to zip");
 
@@ -207,6 +239,12 @@ public class Editor {
                     currentImage = 0;
                     Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
                     image.setImage(imageVar);
+                    centerImage(image);
+                    if (imageVar == null) {
+                        pictureNotAvailableText.setVisible(true);
+                    } else {
+                        pictureNotAvailableText.setVisible(false);
+                    }
                 } else {
                     imageRightButton();
                 }
@@ -245,6 +283,12 @@ public class Editor {
             System.out.println("Now image position is " + currentImage);
             Image imageVar = FileManager.getImage(Global.slide.images.get(currentImage));
             image.setImage(imageVar);
+            centerImage(image);
+            if (imageVar == null) {
+                pictureNotAvailableText.setVisible(true);
+            } else {
+                pictureNotAvailableText.setVisible(false);
+            }
 
             if (currentImage == 0) {
                 imageLeft.setVisible(false);

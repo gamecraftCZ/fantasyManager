@@ -27,7 +27,7 @@
    <Button layoutX="740.0" layoutY="-20.0" mnemonicParsing="false" onMouseClicked="#close">
       <graphic>
           <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-              <Image url="@../../resources/cross.png"/>
+              <Image url="@../../resources/cross.png" />
           </ImageView>
       </graphic>
    </Button>
@@ -52,7 +52,7 @@
         </items>
     </ChoiceBox>
     <Pane fx:id="text" layoutX="14.0" layoutY="122.0" prefHeight="414.0" prefWidth="773.0" visible="false">
-        <TextArea fx:id="buttonTextArea" onKeyReleased="#textAreaChanged" prefHeight="414.0" prefWidth="773.0" promptText="text">
+        <TextArea fx:id="buttonTextArea" onKeyReleased="#textAreaChanged" prefHeight="414.0" prefWidth="773.0" promptText="text" wrapText="true">
             <font>
                 <Font size="14.0" />
             </font>
@@ -60,27 +60,24 @@
     </Pane>
     <Pane fx:id="buttons" layoutX="14.0" layoutY="122.0" prefHeight="414.0" prefWidth="773.0" visible="false">
         <ScrollPane prefHeight="414.0" prefWidth="773.0">
-            <AnchorPane fx:id="scrollAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                        minHeight="0.0" minWidth="0.0" prefHeight="389.0" prefWidth="758.0">
-                <Button fx:id="leftPlus" layoutX="130.0" layoutY="16.0" mnemonicParsing="false"
-                        onMouseClicked="#addLeftButton" prefHeight="32.0" prefWidth="32.0">
+            <AnchorPane fx:id="scrollAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="389.0" prefWidth="758.0">
+                <Button fx:id="leftPlus" layoutX="130.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#addLeftButton" prefHeight="32.0" prefWidth="32.0">
                     <font>
-                        <Font size="17.0"/>
+                        <Font size="17.0" />
                     </font>
                     <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../../resources/plus.png"/>
+                            <Image url="@../../resources/plus.png" />
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="rightPlus" layoutX="500.0" layoutY="16.0" mnemonicParsing="false"
-                        onMouseClicked="#addRightButton" prefHeight="32.0" prefWidth="32.0">
+                <Button fx:id="rightPlus" layoutX="500.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#addRightButton" prefHeight="32.0" prefWidth="32.0">
                     <font>
-                        <Font size="17.0"/>
+                        <Font size="17.0" />
                     </font>
                     <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../../resources/plus.png"/>
+                            <Image url="@../../resources/plus.png" />
                         </ImageView>
                     </graphic>
                 </Button>
@@ -100,6 +97,6 @@
       </Label>
     </Pane>
     <Pane fx:id="popOutRoot" prefHeight="550.0" prefWidth="800.0" visible="false">
-        <Pane fx:id="popOutPane" prefHeight="550.0" prefWidth="800.0"/>
+        <Pane fx:id="popOutPane" prefHeight="550.0" prefWidth="800.0" />
     </Pane>
 </Pane>

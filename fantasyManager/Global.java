@@ -20,7 +20,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class Global {
@@ -219,5 +221,7 @@ public class Global {
         window.showAndWait();
         return dialogOutput;
     }
+
+    public static File lastFolderImageGotFrom;
 
 }

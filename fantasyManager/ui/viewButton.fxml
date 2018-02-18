@@ -33,7 +33,7 @@
    </Label>
    <Label fx:id="buttonSubTitle" layoutX="55.0" layoutY="83.0" prefHeight="27.0" prefWidth="726.0" text="Podnázev" />
     <Pane fx:id="text" layoutX="20.0" layoutY="122.0" prefHeight="400.0" prefWidth="762.0" visible="false">
-      <Label fx:id="buttonTextLabel" alignment="TOP_LEFT" prefHeight="414.0" prefWidth="773.0" text="text" />
+      <Label fx:id="buttonTextLabel" alignment="TOP_LEFT" prefHeight="414.0" prefWidth="773.0" text="text" wrapText="true" />
     </Pane>
     <Pane fx:id="buttons" layoutX="14.0" layoutY="122.0" prefHeight="414.0" prefWidth="773.0" visible="false">
         <ScrollPane prefHeight="414.0" prefWidth="773.0">

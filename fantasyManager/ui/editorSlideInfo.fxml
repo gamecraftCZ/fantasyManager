@@ -21,11 +21,11 @@
           <Font size="55.0" />
         </font>
     </Label>
-    <TextArea fx:id="textArea" layoutX="25.0" layoutY="100.0" prefHeight="425.0" prefWidth="750.0" promptText="Info..." />
+    <TextArea fx:id="textArea" layoutX="25.0" layoutY="100.0" prefHeight="425.0" prefWidth="750.0" promptText="Info..." wrapText="true" />
    <Button layoutX="740.0" layoutY="-20.0" mnemonicParsing="false" onMouseClicked="#close">
       <graphic>
           <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-              <Image url="@../../resources/cross.png"/>
+              <Image url="@../../resources/cross.png" />
           </ImageView>
       </graphic>
    </Button>

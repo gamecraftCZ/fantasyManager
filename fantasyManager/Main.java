@@ -22,7 +22,7 @@ public class Main extends Application {
 
         stage.setTitle("Tvorba nového území");
         stage.setResizable(false);
-        stage.setScene(new Scene(root, 1000, 700));
+        stage.setScene(new Scene(root, 1300, 700));
         // save and then close
         stage.setOnCloseRequest(event -> {
             System.out.println("Closing application");
