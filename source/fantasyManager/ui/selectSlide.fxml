@@ -17,33 +17,24 @@
   ~ Please do not remove this comment!
   -->
 
-<Pane pickOnBounds="false" prefHeight="584.0" prefWidth="600.0"
-      xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="fantasyManager.ui.SelectSlide">
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="586.0" stroke="BLACK" strokeType="INSIDE"
-               width="600.0"/>
+<Pane pickOnBounds="false" prefHeight="584.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.SelectSlide">
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="586.0" stroke="BLACK" strokeType="INSIDE" width="600.0" />
     <Label fx:id="promptText" alignment="CENTER" prefWidth="600.0" text="Zvol slide: " textAlignment="CENTER">
         <font>
-            <Font size="32.0"/>
+            <Font size="32.0" />
         </font>
     </Label>
-    <TextField fx:id="searchField" layoutX="50.0" layoutY="50.0" prefWidth="250.0" promptText="Hledat"/>
-    <Button layoutX="315.0" layoutY="50.0" mnemonicParsing="false" onMouseClicked="#selectMainSlide" prefWidth="120.0"
-            text="Hlavní rozcestník"/>
-    <Button layoutX="450.0" layoutY="50.0" mnemonicParsing="false" onMouseClicked="#cancel"
-            prefWidth="100.0" text="Zrušit výběr"/>
-    <TableView fx:id="searchResultsTableView" layoutX="50.0" layoutY="90.0" pickOnBounds="false" prefHeight="460.0"
-               prefWidth="500.0">
+    <TextField fx:id="searchField" layoutX="50.0" layoutY="50.0" prefWidth="250.0" promptText="Hledat" />
+    <Button layoutX="315.0" layoutY="50.0" mnemonicParsing="false" onMouseClicked="#selectMainSlide" prefWidth="120.0" text="Hlavní rozcestník" />
+    <Button layoutX="450.0" layoutY="50.0" mnemonicParsing="false" onMouseClicked="#cancel" prefWidth="100.0" text="Zrušit výběr" />
+    <TableView fx:id="searchResultsTableView" layoutX="50.0" layoutY="90.0" pickOnBounds="false" prefHeight="460.0" prefWidth="500.0">
         <columns>
-            <TableColumn fx:id="searchResultsColumnName" editable="false" maxWidth="1.7976931348623157E308"
-                         minWidth="-Infinity" prefWidth="300.0" resizable="false" sortable="false" text="Název"/>
-            <TableColumn fx:id="searchResultsColumnValue" editable="false" maxWidth="1.7976931348623157E308"
-                         minWidth="-Infinity" prefWidth="150.0" resizable="false" sortable="false" text="Typ"/>
-            <TableColumn fx:id="searchResultsColumnSelect" editable="false" maxWidth="1.7976931348623157E308"
-                         minWidth="37.0" prefWidth="37.0" resizable="false" sortable="false"/>
+            <TableColumn fx:id="searchResultsColumnName" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="300.0" resizable="false" sortable="false" text="Název" />
+            <TableColumn fx:id="searchResultsColumnValue" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="145.0" resizable="false" sortable="false" text="Typ" />
+            <TableColumn fx:id="searchResultsColumnSelect" editable="false" maxWidth="1.7976931348623157E308" minWidth="37.0" prefWidth="37.0" resizable="false" sortable="false" />
         </columns>
         <opaqueInsets>
-        <Insets/>
+        <Insets />
         </opaqueInsets>
     </TableView>
 </Pane>

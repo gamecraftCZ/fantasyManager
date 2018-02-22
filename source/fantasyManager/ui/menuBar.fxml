@@ -46,10 +46,10 @@
                 </Menu>
                 <Menu fx:id="edit" mnemonicParsing="false" text="Úpravy">
                    <Menu mnemonicParsing="false" text="Přidat">
-                       <MenuItem fx:id="addCharacter" disable="true" mnemonicParsing="false" onAction="#addCharacter" text="Postavu" />
-                       <MenuItem fx:id="addPlace" disable="true" mnemonicParsing="false" onAction="#addPlace" text="Místo" />
-                       <MenuItem fx:id="addOrganisation" disable="true" mnemonicParsing="false" onAction="#addOrganisation" text="Organizaci" />
-                       <MenuItem fx:id="addOther" disable="true" mnemonicParsing="false" onAction="#addOther" text="Ostatní" />
+                       <MenuItem fx:id="addCharacter" mnemonicParsing="false" onAction="#addCharacter" text="Postavu" />
+                       <MenuItem fx:id="addPlace" mnemonicParsing="false" onAction="#addPlace" text="Místo" />
+                       <MenuItem fx:id="addOrganisation" mnemonicParsing="false" onAction="#addOrganisation" text="Organizaci" />
+                       <MenuItem fx:id="addOther" mnemonicParsing="false" onAction="#addOther" text="Ostatní" />
                    </Menu>
                <MenuItem fx:id="deleteSlide" mnemonicParsing="false" onAction="#deleteSlide" text="Smazat slide" />
                     <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undo" text="Zpět" visible="false" />

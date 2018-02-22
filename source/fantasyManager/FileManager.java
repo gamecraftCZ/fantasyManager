@@ -167,6 +167,9 @@ public class FileManager {
         if (fileObject == null) {
             System.out.println("No loaded project -> can't be saved");
             return true;
+        } else if (saved) {
+            System.out.println("File is already saved");
+            return true;
         } else {
             try {
                 System.out.println("Saving project...");
@@ -277,6 +280,7 @@ public class FileManager {
 
                     System.out.println("info saved to file");
 
+                    saved = true;
                     return true;
                 } catch (Exception ex) {
                     System.out.println("Saving error: " + ex.toString());
@@ -601,12 +605,14 @@ public class FileManager {
 
     // DEBUG - prints document as XML \\
     private static void printXML(Document xml) throws Exception {
-        Transformer tf = TransformerFactory.newInstance().newTransformer();
-        tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        tf.setOutputProperty(OutputKeys.INDENT, "yes");
-        Writer out = new StringWriter();
-        tf.transform(new DOMSource(xml), new StreamResult(out));
-        System.out.println(out.toString());
+        if (Main.debugging) {
+            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            tf.setOutputProperty(OutputKeys.INDENT, "yes");
+            Writer out = new StringWriter();
+            tf.transform(new DOMSource(xml), new StreamResult(out));
+            System.out.println(out.toString());
+        }
     }
 
 }

@@ -9,6 +9,7 @@ package fantasyManager.ui;
 
 import fantasyManager.BasicSlideInfo;
 import fantasyManager.Global;
+import fantasyManager.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -116,7 +117,7 @@ public class SelectSlide {
                         }
                     }
                     // slide match criteria
-                    System.out.println("Slide match search criteria: \"" + slide.name + "\"");
+                    if (Main.debugging) System.out.println("Slide match search criteria: \"" + slide.name + "\"");
                     BasicSlideInfo searchedSlide =
                             new BasicSlideInfo(slide.name, slide.path, getNameOfType(slide.type), slide.id);
                     searchMatches.add(searchedSlide);
