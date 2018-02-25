@@ -399,6 +399,7 @@ public class Editor {
                     }
                 }
             }
+            FileManager.saved = false;
         }
     }
 
