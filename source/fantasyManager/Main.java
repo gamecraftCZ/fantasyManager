@@ -21,7 +21,7 @@ import java.util.Calendar;
 
 public class Main extends Application {
 
-    public static final boolean debugging = false;
+    public static final boolean DEBUGGING = false;
     private static final boolean SAVE_LOG_TO_FILE = true;
 
 

@@ -117,7 +117,7 @@ public class SelectSlide {
                         }
                     }
                     // slide match criteria
-                    if (Main.debugging) System.out.println("Slide match search criteria: \"" + slide.name + "\"");
+                    if (Main.DEBUGGING) System.out.println("Slide match search criteria: \"" + slide.name + "\"");
                     BasicSlideInfo searchedSlide =
                             new BasicSlideInfo(slide.name, slide.path, getNameOfType(slide.type), slide.id);
                     searchMatches.add(searchedSlide);

@@ -25,7 +25,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sun.tools.jar.Main;
 
 import java.io.File;
 import java.io.IOException;
@@ -158,7 +157,7 @@ public class Editor {
         if (!Global.slide.name.equals(nameString)) {
             Global.slide.name = nameString;
             FileManager.saved = false;
-            if (fantasyManager.Main.debugging) System.out.println("Name changed to: " + nameString);
+            if (fantasyManager.Main.DEBUGGING) System.out.println("Name changed to: " + nameString);
         }
     }
     public void infoButton() {

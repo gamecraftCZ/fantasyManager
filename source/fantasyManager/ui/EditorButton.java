@@ -131,18 +131,18 @@ public class EditorButton {
     }
 
     public void titleChanged() {
-        if (fantasyManager.Main.debugging) System.out.println("New title: " + buttonTitle.getText());
+        if (fantasyManager.Main.DEBUGGING) System.out.println("New title: " + buttonTitle.getText());
         editingButton.title = buttonTitle.getText();
         editingButton.buttonClickable.setText(buttonTitle.getText());
         FileManager.saved = false;
     }
     public void subTitleChanged() {
-        if (fantasyManager.Main.debugging) System.out.println("New subtitle: " + buttonSubTitle.getText());
+        if (fantasyManager.Main.DEBUGGING) System.out.println("New subtitle: " + buttonSubTitle.getText());
         editingButton.subTitle = buttonSubTitle.getText();
         FileManager.saved = false;
     }
     public void textAreaChanged() {
-        if (fantasyManager.Main.debugging) System.out.println("New text: " + buttonTextArea.getText());
+        if (fantasyManager.Main.DEBUGGING) System.out.println("New text: " + buttonTextArea.getText());
         editingButton.text = buttonTextArea.getText();
         FileManager.saved = false;
     }

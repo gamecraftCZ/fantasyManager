@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.imageio.ImageIO;
+import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -113,9 +114,10 @@ public class FileManager {
     }
     private static boolean loadSlidesBasicInfo() {
         System.out.println("Loading slides basic info");
+        Document doc = null;
         try {
             // get info.xml as doc
-            Document doc = getXmlFileFromZipAsDocument("info.xml");
+            doc = getXmlFileFromZipAsDocument("info.xml");
             // create xPath factory
             XPathFactory xpathFactory = XPathFactory.newInstance();
             XPath xPath = xpathFactory.newXPath();
@@ -140,6 +142,11 @@ public class FileManager {
             return true;
         } catch (Exception e) {
             System.out.println("Can't load basic slides info, error: " + e.toString());
+            if (doc != null) {
+                System.out.println("info.xml contains:");
+                printXML(doc, true);
+            }
+            Global.showError("Nelze načíst projekt!", "Chyba při načítání základních informacích o slidech.");
             return false;
         }
     }
@@ -150,15 +157,27 @@ public class FileManager {
     }
     private static void addBasicSlideInfoFromNode(Node node) {
         BasicSlideInfo info = new BasicSlideInfo();
-        info.name = node.getChildNodes().item(0).getTextContent();
+
+        // get name
+        Node nameNode = node.getChildNodes().item(0);
+        if (nameNode != null) {
+            info.name = nameNode.getTextContent();
+        } else {
+            info.name = "Název je pravděpodobně poškozen!";
+        }
+
         String idString = node.getAttributes().getNamedItem("id").getNodeValue();
         info.id = Integer.parseInt(idString);
+
         info.path = node.getChildNodes().item(1).getTextContent();
         info.type = node.getParentNode().getNodeName();
-        List<String> slidePointingHere = Arrays.asList(node.getChildNodes().item(2)
-                .getTextContent().split(" "));
-        if (!slidePointingHere.get(0).equals(""))
+
+        // get slidesPointingHere
+        Node slidesPointingHereNode = node.getChildNodes().item(2);
+        if (slidesPointingHereNode != null) {
+            List<String> slidePointingHere = Arrays.asList(slidesPointingHereNode.getTextContent().split(" "));
             info.slidesPointingHere.addAll(slidePointingHere);
+        }
 
         Global.slidesList.add(info);
     }
@@ -591,12 +610,14 @@ public class FileManager {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(inputStream);
+            if (Main.DEBUGGING) System.out.println("Loades BasicSlideInfo: ");
+            printXML(doc);
             zip.close();
             return doc;
         } catch (Exception e) {
             System.out.println("Error when getting xml file fro zip as document: " + e.toString());
+            return null;
         }
-        return null;
     }
 
 
@@ -604,14 +625,21 @@ public class FileManager {
 
 
     // DEBUG - prints document as XML \\
-    private static void printXML(Document xml) throws Exception {
-        if (Main.debugging) {
-            Transformer tf = TransformerFactory.newInstance().newTransformer();
-            tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            tf.setOutputProperty(OutputKeys.INDENT, "yes");
-            Writer out = new StringWriter();
-            tf.transform(new DOMSource(xml), new StreamResult(out));
-            System.out.println(out.toString());
+    private static void printXML(Document xml) {
+        printXML(xml, Main.DEBUGGING);
+    }
+    private static void printXML(Document xml, boolean print) {
+        if (print) {
+            try {
+                Transformer tf = TransformerFactory.newInstance().newTransformer();
+                tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                tf.setOutputProperty(OutputKeys.INDENT, "yes");
+                Writer out = new StringWriter();
+                tf.transform(new DOMSource(xml), new StreamResult(out));
+                System.out.println(out.toString());
+            } catch (Exception e) {
+                System.out.println("info.xml cant be printed! Error: " + e.toString());
+            }
         }
     }
 
