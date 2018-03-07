@@ -7,6 +7,7 @@
 
 package fantasyManager.ui;
 
+import fantasyManager.FileManager;
 import fantasyManager.Global;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +26,7 @@ public class EditorSlideInfo {
             public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
 //                System.out.println("New info text: " + newValue);
                 Global.slide.info = newValue;
+                FileManager.saved = false;
             }
         });
     }
