@@ -232,6 +232,7 @@ public class EditorButton {
                     remove_linkPointingHere_fromBasicSlideInfo(editingButton.linkTarget);
                     add_LinkPointingHere_ToBasicSlideInfo(linkPath);
 
+                    FileManager.saved = false;
                     editingButton.linkTarget = linkPath;
                 }
                 break;

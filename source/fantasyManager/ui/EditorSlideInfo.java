@@ -25,8 +25,8 @@ public class EditorSlideInfo {
             @Override
             public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
 //                System.out.println("New info text: " + newValue);
-                Global.slide.info = newValue;
                 FileManager.saved = false;
+                Global.slide.info = newValue;
             }
         });
     }
