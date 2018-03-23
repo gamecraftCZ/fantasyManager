@@ -109,7 +109,7 @@ public class SelectSlide {
         ObservableList<BasicSlideInfo> searchMatches = FXCollections.observableArrayList();
         try {
             for (BasicSlideInfo slide : Global.slidesList) {
-                if (slide.name.contains(searchText)) { // && !slide.path.equals(Global.slide.path)
+                if (slide.name.toLowerCase().contains(searchText.toLowerCase())) { // && !slide.path.equals(Global.slide.path)
                     // if we don't want search for currently opened slide and this slide is that slide
                     if (!searchAlsoForCurrentSlide) {
                         if (slide.path.equals(Global.slide.path)) {
