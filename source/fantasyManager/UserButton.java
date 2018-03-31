@@ -31,6 +31,10 @@ public class UserButton {
     public Pane buttonPane;
     public Button buttonClickable;
 
+    public String getTitle() {
+        return title;
+    }
+
 
     public UserButton(int id) {
         System.out.println("Creating blank user button with id: " +id);

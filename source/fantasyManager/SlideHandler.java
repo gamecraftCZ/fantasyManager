@@ -17,7 +17,14 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.text.Collator;
+import java.text.RuleBasedCollator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
+
+import static fantasyManager.Global.sortButtons;
 
 public class SlideHandler {
 
@@ -94,6 +101,9 @@ public class SlideHandler {
         }
     }
     private void loadData(Document doc) throws Exception {
+        boolean sortLeftButtons = true;
+        boolean sortRightButtons = true;
+
         System.out.println("Reading slide file");
 
         XPathFactory xpathFactory = XPathFactory.newInstance();
@@ -140,6 +150,11 @@ public class SlideHandler {
                 leftButtons.add(getButtonInfo(xPath, doc,
                         "/slide/leftButtons[1]/button[" +(i+1)+ "]", i));
             }
+            sortButtons(leftButtons);
+            // re id the buttons
+            for (int i = 0; i < leftButtons.size(); i++) {
+                leftButtons.get(i).buttonId = i;
+            }
         } catch (Exception ex) {
             System.out.println("Probably no left buttons, error: " +ex.toString());
         }
@@ -154,6 +169,11 @@ public class SlideHandler {
                 System.out.println("Getting info for right button " +i);
                 rightButtons.add(getButtonInfo(xPath, doc,
                         "/slide/rightButtons[1]/button[" +(i+1)+ "]", i));
+            }
+            sortButtons(rightButtons);
+            // re id the buttons
+            for (int i = 0; i < rightButtons.size(); i++) {
+                rightButtons.get(i).buttonId = i;
             }
         } catch (Exception ex) {
             System.out.println("Probably no right buttons, error: " +ex.toString());

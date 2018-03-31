@@ -23,9 +23,24 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
 
 public class Global {
+
+    private static String sortingRules =
+            "< ' ' < A,a;Á,á;À,à;Â,â;Ä,ä;Ą,ą < B,b < C,c;Ç,ç < Č,č < D,d;Ď,ď < E,e;É,é;È,è;Ê,ê;Ě,ě" +
+                    "< F,f < G,g < H,h < CH,Ch,cH,ch < I,i;Í,í < J,j < K,k < L,l;Ľ,ľ;Ł,ł < M,m < N,n;Ň,ň" +
+                    "< O,o;Ó,ó;Ô,ô;Ö,ö < P,p < Q,q < R,r;Ŕ,ŕ < Ř,ř < S,s < Š,š < T,t;Ť,ť" +
+                    "< U,u;Ú,ú;Ů,ů;Ü,ü < V,v < W,w < X,x < Y,y;Ý,ý < Z,z;Ż,ż < Ž,ž" +
+                    "< 0 < 1 < 2 < 3 < 4 < 5 < 6 < 7 < 8 < 9" +
+                    "< '.' < ',' < ';' < '?' < '¿' < '!' < '¡' < ':' < '\"' < '\'' < '«' < '»'" +
+                    "< '-' < '|' < '/' < '\\' < '(' < ')' < '[' < ']' < '<' < '>' < '{' < '}'" +
+                    "< '&' < '¢' < '£' < '¤' < '¥' < '§' < '©' < '®' < '%' < '‰' < '$'" +
+                    "< '=' < '+' < '×' < '*' < '÷' < '~'";
 
     public static SlideHandler slide;
     public static UserButton getButtonById(ArrayList<UserButton> buttons, int buttonId) {
@@ -223,5 +238,14 @@ public class Global {
     }
 
     public static File lastFolderImageGotFrom;
+
+    public static void sortButtons(ArrayList<UserButton> buttonsList) {
+        try {
+            CzechComparator comp = new CzechComparator();
+            buttonsList.sort(Comparator.comparing(UserButton::getTitle, (but1, but2) -> {
+                return comp.compare(but1, but2);
+            }));
+        } catch (Exception e) {}
+    }
 
 }
