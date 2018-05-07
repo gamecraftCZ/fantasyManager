@@ -68,6 +68,16 @@ public class Saves {
                                        └---...
      */
 
+    public static ProjectFilesManager projectFilesManager;
+
+
+
+
+
+
+
+    // TODO rewrite all code to new saves manager
+
     private static File fileObject;
     public static boolean saved = true;
 
@@ -125,7 +135,7 @@ public class Saves {
         Document doc = null;
         try {
             // get info.xml as doc
-            doc = FileLoader.getFileAsDocument("info.xml");
+            doc = projectFilesManager.getFileAsDocument("info.xml");
             // create xPath factory
             XPathFactory xpathFactory = XPathFactory.newInstance();
             XPath xPath = xpathFactory.newXPath();

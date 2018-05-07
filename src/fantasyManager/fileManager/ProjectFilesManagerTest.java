@@ -11,12 +11,20 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-class FileLoaderTest {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class ProjectFilesManagerTest {
+
+    ProjectFilesManager projectFilesManager;
 
     @Test
     void initializeNewProject() {
 
-        FileLoader.initializeNewProject(new File("C:/_temp/test.fmp"));
+        projectFilesManager = new ProjectFilesManager(new File("C:/_temp/test.fmp"));
+
+        assertTrue(projectFilesManager.isInitialized(), "Project files manager not initialized");
 
     }
+
+
 }

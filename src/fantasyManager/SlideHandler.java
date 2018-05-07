@@ -7,7 +7,6 @@
 
 package fantasyManager;
 
-import fantasyManager.fileManager.FileLoader;
 import fantasyManager.fileManager.Saves;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -83,7 +82,7 @@ public class SlideHandler {
         System.out.println("Edited path: " + path);
         // load data
         try {
-            doc = FileLoader.getFileAsDocument(path);
+            doc = Saves.projectFilesManager.getFileAsDocument(path);
             loadData(doc);
             loadedCorrectly = true;
         } catch (Exception ex) {

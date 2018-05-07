@@ -19,32 +19,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CacheManagerTest {
 
+    CacheManager cacheManager;
 
     @BeforeEach
     void setup() {
         System.out.println("Initializing cache folder");
-        boolean initialized = CacheManager.initializeNewCacheFolder("ProjectName");
-        assertTrue(initialized, "Cache not initialized");
+        cacheManager = new CacheManager("ProjectName");
+        assertTrue(cacheManager.isInitialized(), "Cache not initialized");
     }
 
     @AfterEach
     void after() {
         System.out.println("Deleting cache folder");
-        CacheManager.deleteCacheFolder();
+        cacheManager.deleteCacheFolder();
 
         File cacheFile = new File(".ProjectName");
         boolean folderExists = cacheFile.exists();
-        assertFalse(folderExists, "Cache folder was not created");
+        assertFalse(folderExists, "Cache folder was not deleted");
     }
 
 
     @Test
     void initializeNewCacheFolder() {
+        cacheManager.deleteCacheFolder();
         File cacheFile = new File(".ProjectName");
         deleteDir(cacheFile);
 
-        boolean initialized = CacheManager.initializeNewCacheFolder("ProjectName");
-        assertTrue(initialized, "Cache not initialized");
+        cacheManager = new CacheManager("ProjectName");
+        assertTrue(cacheManager.isInitialized(), "Cache not initialized");
 
         boolean folderExists = cacheFile.exists();
         assertTrue(folderExists, "Cache folder was not created");
@@ -56,7 +58,7 @@ class CacheManagerTest {
     void deleteCacheFolder() {
         File cacheFile = new File(".ProjectName");
 
-        CacheManager.deleteCacheFolder();
+        cacheManager.deleteCacheFolder();
 
         boolean folderExists = cacheFile.exists();
         assertFalse(folderExists, "Cache folder was not created");

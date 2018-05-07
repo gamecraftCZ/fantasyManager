@@ -24,59 +24,17 @@ import java.nio.file.Files;
 
 class CacheManager {
 
-    // Testing cache folder class
-//    public static void main(String[] args) {
-//        try {
-//            initializeNewCacheFolder(".cacheFolder");
-//            Thread.sleep(000);
-//
-//            OutputStream outputStream = addCachedFile("testFoldoer/teust.txt");
-//            PrintStream printStream = new PrintStream(outputStream);
-//            printStream.print("test.txt file is in this");
-//            printStream.close();
-//            outputStream.close();
-//
-//            System.out.println("To add");
-//            printStringArray(getListOfFilesToAdd());
-//            System.out.println("To remove");
-//            printStringArray(getListOfFilesToRemove());
-//
-//            Thread.sleep(1000);
-//
-//            InputStream inputStream = getCachedFile("testFoldoer/teust.txt");
-//            Scanner s = new Scanner(inputStream).useDelimiter("\\A");
-//            String result = s.hasNext() ? s.next() : "";
-//            s.close();
-//            System.out.println("Text saved in file: " + result);
-//            inputStream.close();
-//
-//            Thread.sleep(1000);
-//
-//            removeCachedFile("testFoldoer/teust.txt");
-//
-//            System.out.println("To add");
-//            printStringArray(getListOfFilesToAdd());
-//            System.out.println("To remove");
-//            printStringArray(getListOfFilesToRemove());
-//
-//            Thread.sleep(000);
-//            //deleteCacheFolder();
-//        } catch (Exception e) {
-//            System.out.println("Unexpected testing error: " + e);
-//        }
-//    }
-
-    private static final String cacheManagerFileName = ".cacheInfo.xml";
+    private final String cacheManagerFileName = ".cacheInfo.xml";
 
 
-    private static File cacheInfoFile;
-    private static Document cacheInfoDocument;
+    private File cacheInfoFile;
+    private Document cacheInfoDocument;
 
-    private static File cacheFolder;
-    private static boolean initialized = false;
+    private File cacheFolder;
+    private boolean initialized = false;
 
 
-    public static boolean initializeNewCacheFolder(String folderName) {
+    public CacheManager(String folderName) {
         folderName = "." + folderName;
         initialized = false;
         if (Main.DEBUGGING) System.out.println("Initializing cache folder: \"" + folderName + "\"");
@@ -94,7 +52,7 @@ class CacheManager {
                 System.out.println("Cant create cache folder!");
                 Global.showError("Cant create cache folder", "Cache folder " + cacheFolder + "cant" +
                         " be created! ");
-                return false;
+                return;
             }
         }
 
@@ -102,19 +60,18 @@ class CacheManager {
         if (cacheInfoFile.exists()) {
             if (!loadCacheInfoFile()) {
                 if (!createNewCacheInfoFile()) {
-                    return false;
+                    return;
                 }
             }
         } else {
             if (!createNewCacheInfoFile()) {
-                return false;
+                return;
             }
         }
 
         initialized = true;
-        return true;
     }
-    private static boolean loadCacheInfoFile() {
+    private boolean loadCacheInfoFile() {
         try {
             InputStream inputStream = new FileInputStream(cacheInfoFile);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -128,7 +85,7 @@ class CacheManager {
             return false;
         }
     }
-    private static boolean createNewCacheInfoFile() {
+    private boolean createNewCacheInfoFile() {
         try {
             if (!cacheInfoFile.createNewFile()) {
                 System.out.println("Cache info file not created, probably already exists");
@@ -144,7 +101,7 @@ class CacheManager {
         }
     }
 
-    public static void deleteCacheFolder() {
+    public void deleteCacheFolder() {
         if (initialized)
             System.out.println("Deleting cache folder: \"" + cacheFolder + "\"");
             if (cacheFolder.exists()) {
@@ -152,7 +109,7 @@ class CacheManager {
             }
             initialized = false;
     }
-    private static void deleteDir(File file) {
+    private void deleteDir(File file) {
         try {
             File[] contents = file.listFiles();
             if (contents != null) {
@@ -168,7 +125,7 @@ class CacheManager {
         } catch (Exception e) {}
     }
 
-    public static InputStream getCachedFile(String filePath) {
+    public InputStream getCachedFile(String filePath) {
         if (initialized) {
             if (Main.DEBUGGING) System.out.println("Getting file from cache");
             String fullFilePath = cacheFolder + File.separator + filePath;
@@ -183,7 +140,7 @@ class CacheManager {
             return null;
         }
     }
-    public static OutputStream addCachedFile(String filePath) {
+    public OutputStream addCachedFile(String filePath) {
         if (initialized) {
             String fullFilePath = cacheFolder + File.separator + filePath;
             if (Main.DEBUGGING) System.out.println("Adding file to cache, path: " + fullFilePath);
@@ -204,7 +161,7 @@ class CacheManager {
             return null;
         }
     }
-    public static void removeCachedFile(String filePath) {
+    public void removeCachedFile(String filePath) {
         if (initialized) {
             String fullFilePath = cacheFolder + File.separator + filePath;
             if (Main.DEBUGGING) System.out.println("Deleting file from cache, path: " + fullFilePath);
@@ -222,13 +179,13 @@ class CacheManager {
         }
     }
 
-    public static String[] getListOfFilesToAdd() {
+    public String[] getListOfFilesToAdd() {
         return getListOfFilesWithTag("add");
     }
-    public static String[] getListOfFilesToRemove() {
+    public String[] getListOfFilesToRemove() {
         return getListOfFilesWithTag("remove");
     }
-    private static String[] getListOfFilesWithTag(String tag) {
+    private String[] getListOfFilesWithTag(String tag) {
         NodeList nodeList = cacheInfoDocument.getDocumentElement().getElementsByTagName(tag);
         int nodeListLength = nodeList.getLength();
         String filesToAddArray[] = new String[nodeListLength];
@@ -241,7 +198,7 @@ class CacheManager {
         return filesToAddArray;
     }
 
-    private static void addFileToCacheInfo(String pathToFile) {
+    private void addFileToCacheInfo(String pathToFile) {
         Element root = cacheInfoDocument.getDocumentElement();                   // get root element
 
         // Remove file from list
@@ -259,7 +216,7 @@ class CacheManager {
 
         saveCacheInfoToFile();                                                   // save cache info to file
     }
-    private static void removeFileFromCacheInfo(String pathToFile) {
+    private void removeFileFromCacheInfo(String pathToFile) {
         Element root = cacheInfoDocument.getDocumentElement();                   // get root element
 
         // Remove file from list
@@ -277,7 +234,7 @@ class CacheManager {
 
         saveCacheInfoToFile();                                                   // save cache info to file
     }
-    private static void saveCacheInfoToFile() {
+    private void saveCacheInfoToFile() {
         try {
             String fullFilePath = cacheFolder + File.separator + cacheManagerFileName;      // build full path to cache info file
             OutputStream outputStream =  new FileOutputStream(fullFilePath);                // make output stream to this file
@@ -295,15 +252,8 @@ class CacheManager {
         }
     }
 
-    public static boolean isInitialized() {
+    public boolean isInitialized() {
         return initialized;
-    }
-
-    // DEGUG functions //
-    private static void printStringArray(String[] array) {
-        for (String string : array) {
-            System.out.println(string);
-        }
     }
 
 }
