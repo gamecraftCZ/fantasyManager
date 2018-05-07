@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ 2018 Patrik Vácal.
+  ~ This file is under GNU-GPL license.
+  ~ This project on github: https://github.com/gamecraftCZ/fantasyManager
+  ~ Please do not remove this comment!
+  -->
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<Pane fx:id="add" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.Add">
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="600.0" stroke="BLACK" strokeType="INSIDE" width="900.0" />
+    <Label layoutX="380.0" text="Přidat">
+        <font>
+            <Font size="50.0" />
+        </font>
+    </Label>
+    <Button layoutX="300.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#add" text="Přidat">
+        <font>
+            <Font size="24.0" />
+        </font>
+    </Button>
+    <Button layoutX="500.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#cancel" text="Zrušit">
+        <font>
+            <Font size="24.0" />
+        </font>
+    </Button>
+    <Label layoutX="310.0" layoutY="90.0" text="Typ: ">
+        <font>
+            <Font size="28.0" />
+        </font>
+    </Label>
+    <ChoiceBox fx:id="typeOfSlide" layoutX="380.0" layoutY="100.0" prefWidth="200.0">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Postava" />
+                <String fx:value="Místo" />
+                <String fx:value="Organizace" />
+                <String fx:value="Ostatní" />
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+    <Label layoutX="150.0" layoutY="150.0" text="Název:">
+        <font>
+            <Font size="30.0" />
+        </font>
+    </Label>
+    <TextField fx:id="slideName" layoutX="245.0" layoutY="150.0" prefWidth="500.0" promptText="Název">
+        <font>
+            <Font size="24.0" />
+        </font>
+    </TextField>
+    <Label layoutX="150.0" layoutY="250.0" text="Nadřazený orgán:">
+        <font>
+            <Font size="35.0" />
+        </font>
+    </Label>
+    <Button layoutX="440.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#getUpSlide" prefHeight="75.0" prefWidth="75.0" text="...">
+        <font>
+            <Font size="35.0" />
+        </font>
+    </Button>
+    <Label fx:id="upSlideName" layoutX="550.0" layoutY="268.0" text="Hlavní rozcestník">
+        <font>
+            <Font size="20.0" />
+        </font>
+    </Label>
+    <Pane fx:id="selectSlidePathRoot" layoutX="150.0" layoutY="8.0" prefHeight="584.0" prefWidth="600.0" visible="false" />
+</Pane>

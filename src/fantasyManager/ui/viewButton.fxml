@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ 2018 Patrik Vácal.
+  ~ This file is under GNU-GPL license.
+  ~ This project on github: https://github.com/gamecraftCZ/fantasyManager
+  ~ Please do not remove this comment!
+  -->
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<Pane prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fantasyManager.ui.ViewButton">
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="550.0" stroke="BLACK" strokeType="INSIDE" width="800.0" />
+    <Button layoutX="740.0" layoutY="-20.0" mnemonicParsing="false" onMouseClicked="#close">
+        <graphic>
+            <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../../resources/cross.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+   <Label fx:id="buttonTitle" layoutX="20.0" layoutY="14.0" prefHeight="60.0" prefWidth="700.0" text="Název tlačítka">
+      <font>
+         <Font size="26.0" />
+      </font>
+   </Label>
+   <Label fx:id="buttonSubTitle" layoutX="55.0" layoutY="83.0" prefHeight="27.0" prefWidth="726.0" text="Podnázev" />
+    <Pane fx:id="text" layoutX="20.0" layoutY="122.0" prefHeight="400.0" prefWidth="762.0" visible="false">
+      <Label fx:id="buttonTextLabel" alignment="TOP_LEFT" prefHeight="414.0" prefWidth="773.0" text="text" wrapText="true" />
+    </Pane>
+    <Pane fx:id="buttons" layoutX="14.0" layoutY="122.0" prefHeight="414.0" prefWidth="773.0" visible="false">
+        <ScrollPane prefHeight="414.0" prefWidth="773.0">
+            <AnchorPane fx:id="buttonViewScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="389.0" prefWidth="758.0" />
+        </ScrollPane>
+    </Pane>
+    <Pane prefHeight="550.0" prefWidth="800.0" visible="false">
+        <Pane fx:id="popOutPane" prefHeight="550.0" prefWidth="800.0" />
+    </Pane>
+</Pane>
