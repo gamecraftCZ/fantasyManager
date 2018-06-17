@@ -10,7 +10,8 @@ Please donate coffee to support future development.
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZJJK5NN5F78L8) (CZK)
 
-Bitcoin: 1FeEDfS2vcCnKktWr5cMZF31nvZhSVZCP1
+Bitcoin: Unfortunately not, if you really eant to donate, send mail to: gamecraftczz@gmail.com  
+thanks
 
 
 
